@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}Submissions{% endblock %}
+
+{% block main %}
+<h1>Submissions</h1>
+<div class="flex">
+    <div style="flex: 3; overflow: auto;">
+        <table class="table table-hover" style="min-width: 400px;">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" style="width: 15%;">ID</th>
+                    <th scope="col" style="width: 25%;">Time</th>
+                    <th scope="col" style="width: 28%;">Username</th>
+                    <th scope="col" style="width: 18%;">Score</th>
+                    <th scope="col" style="width: 14%;">View</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row["id"] }}</td>
+                    <td class="dt">{{ row["date"] }}</td>
+                    <td>{{ row["username"] }}</td>
+                    <td>{{ row["score"] }}</td>
+                    <td><a href="/quiz/results?id={{ row['id'] }}">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="flex: 1; margin-left: 8px;" id="submission-search-right">
+        <div class="card">
+            <h3>Filter Submissions</h3>
+            <form>
+                <input class="form-control form-group" type="text" id="username" name="username" placeholder="Filter by username">
+                <select class="form-control form-group" id="score" name="score">
+                    <option value="" selected hidden>Filter by score</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <input class="btn btn-primary" type="submit" value="Filter!">
+            </form>
+        </div>
+    </div>
+</div>
+<div id="submission-search-bottom">
+    <div class="card">
+        <h3>Filter Submissions</h3>
+        <form>
+            <input class="form-control form-group" type="text" id="username" name="username" placeholder="Filter by username">
+            <select class="form-control form-group" id="correct" name="correct">
+                <option value="" selected hidden>Filter by score</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <input class="btn btn-primary" type="submit" value="Filter!">
+        </form>
+    </div>
+</div>
+<script>
+    var queryStrings = new URL(window.location.href).searchParams;
+    if (queryStrings.get("problem_id") != false) $("form #problem_id").attr("value", queryStrings.get("problem_id"));
+    if (queryStrings.get("contest_id") != false) $("form #contest_id").attr("value", queryStrings.get("contest_id"));
+</script>
+{% endblock %}

@@ -1,0 +1,41 @@
+# Installation
+Prerequisites: Python 3
+
+It is recommended to create a venv (virtual environment) first.
+
+# Initial setup
+### Linux (Bash)
+```bash
+pip3 install -r requirements.txt
+python3 install.py
+nano settings.py
+```
+In settings.py, you should add your email credentials as indicated by default_settings.py. Additionally, you may change the other email settings if you use a SMTP provider other than Gmail. This email account will be used to send system emails, such as password reset emails.
+
+### Windows (cmd)
+```cmd
+pip install -r requirements.txt
+python install.py
+```
+Open settings.py in your text editor of choice, and you should add your email credentials as indicated by default_settings.py. Additionally, you may change the other email settings if you use a SMTP provider other than Gmail. This email account will be used to send system emails, such as password reset emails.
+
+# Running in Debug Mode
+### Linux (Bash)
+```bash
+export FLASK_APP=application.py
+flask run
+```
+
+### Windows (cmd)
+```cmd
+set FLASK_APP=application.py
+flask run
+```
+If you do not want to export the FLASK_APP variable every time you reset your terminal, you can create a symbolic link from app.py to application.py.
+
+Do not expose the app to the web using debug mode. You should run the app through Apache or a similar service.
+
+# Logging in for the first time
+An admin account has been created in step 2. You can log in to it using the credentials `admin:FBLAadmin`. Make sure you change your password immediately after logging in. Enabling 2FA is also recommended for the admin account. You can change your password and enable 2FA through the settings page.
+
+You are now good to go! It is recommended to start adding questions now, through the 'Admin Console' interface.

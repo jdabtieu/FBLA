@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block title %}Create Problem{% endblock %}
+
+{% block main %}
+<h1>Create Problem</h1>
+<form autocomplete="off" method="post" id="create" name="create">
+    <select class="form-control form-group" name="type" id="typeselect">
+        <option value="MC">Multiple Choice</option>
+        <option value="TF">True/False</option>
+        <option value="Drop">Dropdown</option>
+        <option value="Blank">Fill in the Blank</option>
+        <option value="Select">Select All</option>
+    </select>
+    <input class="form-control form-group" type="text" name="question" placeholder="Question" required>
+    {% for letter in "abcd" %}
+    <div id="{{ letter }}" class="inputs">
+        <input type="radio" name="ans" value="{{ letter }}" required style="display: inline;">
+        <input class="form-control form-group create-blank blank" name="{{ letter }}" placeholder="Choice {{ letter }}" required>
+    </div>
+    {% endfor %}
+    <select class="form-control form-group" name="difficulty">
+        <option value="Medium" selected hidden>Difficulty</option>
+        <option value="Baby">Baby</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+        <option value="Impossible">Impossible</option>
+    </select>
+    <select class="form-control form-group" name="category">
+        <option value="Misc" selected hidden>Category</option>
+        <option value="History">History</option>
+        <option value="Events">Events</option>
+        <option value="Organization">Organization</option>
+        <option value="Misc">Misc</option>
+    </select>
+    <div class="form-control form-group" style="border: 0;">
+        <input type="checkbox" id="draft" name="draft">
+        <label for="draft">Draft?</label>
+    </div>
+    <input class="btn btn-primary" type="submit" id="submit" name="submit" value="Create">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+</form>
+<script>
+    $("#typeselect").change(function() {
+        var selected = this.value;
+        if (selected === "MC" || selected === "Drop") {
+            $(".inputs input[type='checkbox']").attr("type", "radio");
+            $(".inputs").css("display", "");
+            $(".inputs input[type='radio']").css("display", "");
+            $(".inputs .blank").addClass("create-blank").attr("required", "");
+            $(".inputs input[type='radio']").attr("required", "");
+        } else if (selected === "TF") {
+            $(".inputs input[type='checkbox']").attr("type", "radio");
+            $("#a .blank").val("True");
+            $("#b .blank").val("False");
+            $("#c").css("display", "none").find(".blank").removeAttr("required");
+            $("#d").css("display", "none").find(".blank").removeAttr("required");
+            $(".inputs input[type='radio']").attr("required", "");
+            $(".inputs .blank").addClass("create-blank");
+        } else if (selected === "Blank") {
+            $(".inputs input[type='radio']").css("display", "none").removeAttr("required");
+            $(".inputs").css("display", "");
+            $(".inputs .blank").removeClass("create-blank");
+            $("#b .blank").removeAttr("required");
+            $("#c .blank").removeAttr("required");
+            $("#d .blank").removeAttr("required");
+        } else {
+            $(".inputs input[type='radio']").removeAttr("required");
+            $(".inputs .blank").removeAttr("required");
+            $(".inputs input[type='radio']").attr("type", "checkbox");
+        }
+    });
+</script>
+{% endblock %}

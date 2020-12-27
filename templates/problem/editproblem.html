@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit Problem{% endblock %}
+
+{% block main %}
+<h1>Edit Problem</h1>
+<form autocomplete="off" method="post" id="create" name="create">
+    <input
+        class="form-control form-group"
+        type="text"
+        name="question"
+        placeholder="Question"
+        value="{{ data['description'] }}"
+        required>
+    {% if data["type"] == "MC" or data["type"] == "Drop" %}
+        {% for letter in "abcd" %}
+            <div>
+                <input
+                    type="radio"
+                    name="ans"
+                    value="{{ letter }}"
+                    {{ "checked" if data["correct"] == letter }}
+                    required
+                    style="display: inline;">
+                <input
+                    class="form-control form-group create-blank"
+                    name="{{ letter }}"
+                    placeholder="Choice {{ letter }}"
+                    value="{{ data[letter] }}"
+                    required>
+            </div>
+        {% endfor %}
+    {% elif data["type"] == "TF" %}
+        {% for letter in "ab" %}
+            <div>
+                <input
+                    type="radio"
+                    name="ans"
+                    value="{{ 'True' if letter == 'a' else 'False' }}"
+                    {{ "checked" if data["correct"] == letter }}
+                    required
+                    style="display: inline;">
+                <input
+                    class="form-control form-group create-blank"
+                    name="{{ letter }}"
+                    placeholder="Choice {{ letter }}"
+                    value="{{ data[letter] }}"
+                    required>
+            </div>
+        {% endfor %}
+    {% elif data["type"] == "Blank" %}
+        {% for letter in "abcd" %}
+            <div>
+                <input
+                    class="form-control form-group"
+                    name="{{ letter }}"
+                    placeholder="Accepted answer"
+                    value="{{ data[letter] if data[letter] else '' }}"
+                    {{ 'required' if letter == 'a' }}>
+            </div>
+        {% endfor %}
+    {% elif data["type"] == "Select" %}
+        {% for letter in "abcd" %}
+            <div>
+                <input
+                    type="checkbox"
+                    name="ans"
+                    value="{{ letter }}"
+                    {{ "checked" if letter in data["correct"] }}
+                    style="display: inline;">
+                <input
+                    class="form-control form-group create-blank"
+                    name="{{ letter }}"
+                    placeholder="Choice {{ letter }}"
+                    value="{{ data[letter] }}"
+                    required>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <select class="form-control form-group" name="difficulty">
+        <option value="Baby" {{ "selected" if data["difficulty"] == "Baby" }}>Baby</option>
+        <option value="Easy" {{ "selected" if data["difficulty"] == "Easy" }}>Easy</option>
+        <option value="Medium" {{ "selected" if data["difficulty"] == "Medium" }}>Medium</option>
+        <option value="Hard" {{ "selected" if data["difficulty"] == "Hard" }}>Hard</option>
+        <option value="Impossible" {{ "selected" if data["difficulty"] == "Impossible" }}>Impossible</option>
+    </select>
+    <select class="form-control form-group" name="category">
+        <option value="History" {{ "selected" if data["category"] == "History" }}>History</option>
+        <option value="Events" {{ "selected" if data["category"] == "Events" }}>Events</option>
+        <option value="Organization" {{ "selected" if data["category"] == "Organization" }}>Organization</option>
+        <option value="Misc" {{ "selected" if data["category"] == "Misc" }}>Misc</option>
+    </select>
+    <input class="btn btn-primary" type="submit" id="submit" name="submit" value="Edit">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+</form>
+{% endblock %}

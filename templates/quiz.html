@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}Quiz{% endblock %}
+
+{% block main %}
+<h1>FBLA Quiz</h1>
+<form method="post" action="/quiz/results" autocomplete="off">
+    {% for question in questions %}
+        <div class="form-group">
+            <h3>{{ question["description"] }}</h3>
+            {% if question["type"] == "MC" %}
+                {% for letter in "abcd" %}
+                    <input
+                        type="radio"
+                        id="{{ question['id'] }}_{{ letter }}"
+                        name="{{ question['id'] }}"
+                        value="{{ question['id'] }}_{{ letter }}"
+                        required>
+                    <label for="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</label><br>
+                {% endfor %}
+            {% elif question["type"] == "TF" %}
+                {% for letter in "ab" %}
+                    <input
+                        type="radio"
+                        id="{{ question['id'] }}_{{ letter }}"
+                        name="{{ question['id'] }}"
+                        value="{{ question['id'] }}_{{ letter }}"
+                        required>
+                    <label for="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</label><br>
+                {% endfor %}
+            {% elif question["type"] == "Blank" %}
+                    <input
+                        name="{{ question['id'] }}"
+                        placeholder="Fill in the Blank"
+                        required>
+            {% elif question["type"] == "Select" %}
+                {% for letter in "abcd" %}
+                    <input
+                        type="checkbox"
+                        id="{{ question['id'] }}_{{ letter }}"
+                        name="{{ question['id'] }}"
+                        value="{{ question['id'] }}_{{ letter }}">
+                    <label for="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</label><br>
+                {% endfor %}
+                <input
+                    type="checkbox"
+                    name="{{ question['id'] }}"
+                    value="{{ question['id'] }}_e"
+                    style="display: none;"
+                    checked>
+            {% elif question["type"] == "Drop" %}
+                <select class="form-control form-group" name="{{ question['id'] }}">
+                    <option value="" selected hidden>Select...</option>
+                    {% for letter in "abcd" %}
+                        <option value="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <button class="btn btn-primary" id="submit">Submit</button>
+</form>
+{% endblock %}

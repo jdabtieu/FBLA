@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block main %}
+<h1>Register</h1>
+<form method="post">
+    <input autocomplete="off" autofocus class="form-control form-group" name="username" placeholder="Username" type="text" required>
+    <input class="form-control form-group" name="email" placeholder="Email Address" type="email" required>
+    <input class="form-control form-group" name="password" placeholder="Password" type="password" required>
+    <input class="form-control form-group" name="confirmation" placeholder="Confirmation" type="password" required>
+    <button class="btn btn-primary" type="submit">Register</button>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+</form>
+<br>
+<p style="margin-top: 8px;">
+    Your password must be at least 8 characters long.<br>
+    You must provide a valid email account to register on this site. By registering, you acknowledge that you have read our <a href="/privacy">privacy policy</a> and agree to abide by our <a href="/terms">terms of service</a>.
+</p>
+{% endblock %}

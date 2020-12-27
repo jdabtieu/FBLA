@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}Quiz Results{% endblock %}
+
+{% block main %}
+<div style="position: relative;">
+    <button onclick="window.print()" class="print-button">
+        <img src="/assets/images/print-solid.svg" onerror="this.src='/assets/images/print-solid.png'" class="icon">
+    </button>
+</div>
+<h1>FBLA Quiz Results</h1>
+{% if not "user_id" in session %}
+    <p>Did you know? You can <a href="/register">register an account</a> or <a href="/login">sign in</a> to save your results!</p>
+{% endif %}
+<i>Quiz taken at <span class="dt">{{ sub["date"] }}</span></i>
+<h5>Score: {{ sub["score"] }}/5</h5>
+<h5>Taken By: {{ sub["username"] if sub["username"] else "Anonymous" }}</h5>
+{% for question in sub_data %}
+    <div class="form-group">
+        <div style="position: relative;">
+            <h3 style="display: inline;">{{ question["description"] }}</h3>
+            {% if question['type'] == 'Blank' %}
+                {% if question['answer'] == question['a'] or question['answer'] == question['b'] or question['answer'] == question['c'] or question['answer'] == question['d'] %}
+                    <img class="svg-green post-quiz-icon" src="/assets/images/check.svg" onerror="this.src='/assets/images/check.png'"></img>
+                {% else %}
+                    <img class="svg-red post-quiz-icon" src="/assets/images/times.svg" onerror="this.src='/assets/images/times.png'"></img>
+                {% endif %}
+            {% else %}
+                {% if question['answer'] == question['correct'] %}
+                    <img class="svg-green post-quiz-icon" src="/assets/images/check.svg" onerror="this.src='/assets/images/check.png'"></img>
+                {% else %}
+                    <img class="svg-red post-quiz-icon" src="/assets/images/times.svg" onerror="this.src='/assets/images/times.png'"></img>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% if question['type'] == 'MC' or question['type'] == 'Drop' %}
+            {% for letter in "abcd" %}
+                <input
+                    type="radio"
+                    id="{{ question['id'] }}_{{ letter }}"
+                    name="{{ question['id'] }}"
+                    value="{{ question['id'] }}_{{ letter }}"
+                    {{ "checked" if question["answer"] == letter }} disabled>
+                <label
+                    for="{{ question['id'] }}_{{ letter }}"
+                    class="{{ 'green' if question['correct'] == letter }} {{ 'red' if question['answer'] == letter and question['answer'] != question['correct'] }}">
+                        {{ question[letter] }}
+                </label><br>
+            {% endfor %}
+        {% elif question['type'] == 'TF' %}
+            {% for letter in "ab" %}
+                <input
+                    type="radio"
+                    id="{{ question['id'] }}_{{ letter }}"
+                    name="{{ question['id'] }}"
+                    value="{{ question['id'] }}_{{ letter }}"
+                    {{ "checked" if question["answer"] == letter }} disabled>
+                <label
+                    for="{{ question['id'] }}_{{ letter }}"
+                    class="{{ 'green' if question['correct'] == letter }} {{ 'red' if question['answer'] == letter and question['answer'] != question['correct'] }}">
+                        {{ question[letter] }}
+                </label><br>
+            {% endfor %}
+        {% elif question['type'] == 'Blank' %}
+            <input
+                name="{{ question['id'] }}"
+                value="{{ question['answer'] }}"
+                disabled><br>
+            <p>Accepted answers:
+                {% for letter in "abcd" %}
+                    {% if question[letter] is not none %}
+                        {{ question[letter] }}&nbsp;
+                    {% endif %}
+                {% endfor %}
+            </p>
+        {% elif question['type'] == 'Select' %}
+            {% for letter in "abcd" %}
+                <input
+                    type="checkbox"
+                    id="{{ question['id'] }}_{{ letter }}"
+                    name="{{ question['id'] }}"
+                    value="{{ question['id'] }}_{{ letter }}"
+                    {{ "checked" if letter in question["answer"] }} disabled>
+                <label
+                    for="{{ question['id'] }}_{{ letter }}"
+                    class="{{ 'green' if letter in question['correct'] and letter in question['answer'] }} {{ 'red' if letter not in question['correct'] and letter in question['answer'] or letter in question['correct'] and letter not in question['answer'] }}">
+                        {{ question[letter] }}
+                </label><br>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endfor %}
+{% endblock %}

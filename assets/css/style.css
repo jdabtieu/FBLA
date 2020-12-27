@@ -1,0 +1,93 @@
+/****************** SUBMISSIONS PAGE LAYOUT ******************/
+@media screen and (min-width: 990.01px) {
+    #submission-search-bottom {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 990px) {
+    #submission-search-right {
+        display: none;
+    }
+}
+
+/****************** MISC DISPLAY FIXES ***********************/
+.card {
+    padding: 16px;
+}
+
+.flex {
+    display: flex;
+}
+
+.icon {
+    width: 16px;
+}
+
+.post-quiz-icon {
+    width: 24px;
+    margin-left: 12px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+table {
+    table-layout: fixed;
+}
+
+main {
+    padding-top: 3rem!important;
+    padding-bottom: 3rem!important;
+}
+
+td {
+    word-break: break-word;
+}
+
+.print-button {
+    position: absolute;
+    right: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    margin: 4px;
+}
+
+@media print {
+    .print-button {
+        display: none!important;
+    }
+}
+
+/****************** ADMIN INTERFACE **************************/
+.create-blank {
+    display: inline;
+    width: calc(100% - 20px);
+    margin-left: 2px;
+}
+
+/****************** COLOURS **********************************/
+.white {
+    color: #ffffff!important;
+}
+
+.black {
+    color: #000000!important;
+}
+
+.red {
+    color: #ff0000!important;
+}
+
+.green {
+    color: #00ff00!important;
+}
+
+.svg-red {
+    filter: invert(16%) sepia(100%) saturate(6752%) hue-rotate(1deg) brightness(99%) contrast(117%);
+}
+
+.svg-green {
+    filter: invert(57%) sepia(58%) saturate(3606%) hue-rotate(83deg) brightness(118%) contrast(125%);
+}

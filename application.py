@@ -203,7 +203,7 @@ def register():
     send_email('Confirm Your NAME Account',
                app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
-   db.execute("INSERT INTO users(username, password, email, join_date) VALUES(:username, :password, :email, datetime('now'))",
+    db.execute("INSERT INTO users(username, password, email, join_date) VALUES(:username, :password, :email, datetime('now'))",
                username=username,
                password=generate_password_hash(password),
                email=email)

@@ -126,7 +126,8 @@ def login():
         send_email('Confirm Your NAME Login',
                    app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
-        flash('A login confirmation email has been sent to the email address you provided. Be sure to check your spam folder!', 'success')
+        flash(('A login confirmation email has been sent to the email address you '
+               'provided. Be sure to check your spam folder!'), 'success')
         return render_template("auth/login.html")
 
     # Remember which user has logged in
@@ -202,7 +203,8 @@ def register():
     send_email('Confirm Your NAME Account',
                app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
-    db.execute(("INSERT INTO users(username, password, email, join_date) VALUES(:username, :password, :email, datetime('now'))"),
+    db.execute(("INSERT INTO users(username, password, email, join_date) "
+                "VALUES(:username, :password, :email, datetime('now'))"),
                username=username,
                password=generate_password_hash(password),
                email=email)
@@ -377,7 +379,7 @@ def reset_password_user(token):
         user_id = 0
 
     if not user_id or datetime.strptime(
-                        token["expiration"], "%Y-%m-%dT%H:%M:%S.%f") < datetime.utcnow():
+            token["expiration"], "%Y-%m-%dT%H:%M:%S.%f") < datetime.utcnow():
         flash('Password reset link expired/invalid', 'danger')
         return redirect('/forgotpassword')
 
@@ -445,7 +447,7 @@ def problem(problem_id):
         sub_data['total_subs'] = 'No submissions yet'
         sub_data['correct_subs'] = 'No submissions yet'
     else:
-        sub_data['percentage'] = "{p:.2f}%".format(p=correct_subs/len(raw_sub_data)*100)
+        sub_data['percentage'] = "{0:.2f}%".format(correct_subs / len(raw_sub_data) * 100)
         sub_data['total_subs'] = str(len(raw_sub_data))
         sub_data['correct_subs'] = str(correct_subs)
 
@@ -579,7 +581,7 @@ def admin_submissions():
         modifier = modifier[:-4]
         submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
                                   "LEFT JOIN users ON user_id=users.id ") + modifier,
-                                  *args)
+                                 *args)
 
     return render_template("admin/submissions.html", data=submissions)
 
@@ -646,7 +648,7 @@ def createproblem():
 
     db.execute(("INSERT INTO problems (type, description, a, b, c, d, correct, category, "
                 "difficulty, draft) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"),
-                qtype, question, a, b, c, d, ans, category, difficulty, draft)
+               qtype, question, a, b, c, d, ans, category, difficulty, draft)
 
     problem_id = db.execute("SELECT * FROM problems ORDER BY id DESC LIMIT 1")[0]["id"]
 
@@ -712,7 +714,7 @@ def reset_password():
     db.execute("UPDATE users SET password=:p WHERE id=:id",
                p=generate_password_hash(password), id=user_id)
 
-    flash("Password for " + user[0]["username"] +
+    flash("Password for " + user[0]["username"] + 
           " resetted! Their new password is " + password, "success")
     return redirect("/admin/users")
 
@@ -783,7 +785,7 @@ def quiz_results():
         # Get details about the submission to display to the user
         sub = db.execute(("SELECT submissions.*, users.username FROM submissions "
                           "LEFT JOIN users ON user_id=users.id WHERE submissions.id=:id"),
-                          id=sub_id)
+                         id=sub_id)
 
         if len(sub) == 0:
             flash("This submission doesn't exist", "danger")
@@ -835,9 +837,9 @@ def quiz_results():
             flash("Do not modify the quiz!", "danger")
             return redirect("/quiz")
 
-        if (data[0]["type"] == "MC" or
-            data[0]["type"] == "Drop" or
-            data[0]["type"] == "TF"):
+        if (data[0]["type"] == "MC" or 
+                data[0]["type"] == "Drop" or 
+                data[0]["type"] == "TF"):
             if data[0]["correct"] == answer[1]:
                 correct += 1
                 db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",

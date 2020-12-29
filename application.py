@@ -494,8 +494,8 @@ def editproblem(problem_id):
     category = request.form.get("category")
 
     if not question or not difficulty or not category:
-        flash("You did not fill all required fields", "danger"), 400
-        return render_template("problem/create.html")
+        flash("You did not fill all required fields", "danger")
+        return render_template("problem/create.html"), 400
 
     ans = request.form.get("ans")
     a = request.form.get("a")
@@ -503,22 +503,16 @@ def editproblem(problem_id):
     c = request.form.get("c")
     d = request.form.get("d")
 
-    if qtype == "MC" or qtype == "Drop":
-        if not ans or not a or not b or not c or not d:
-            flash("You did not fill all required fields", "danger"), 400
-            return render_template("problem/create.html")
+    if not check_problem(qtype, ans, a, b, c, d):
+            flash("You did not fill all required fields", "danger")
+            return render_template("problem/create.html"), 400
 
+    # Extra steps for storage of different question types
     if qtype == "TF":
-        if not ans or not a or not b:
-            flash("You did not fill all required fields", "danger"), 400
-            return render_template("problem/create.html")
         c = None
         d = None
 
     if qtype == "Blank":
-        if not a:
-            flash("You did not fill all required fields", "danger"), 400
-            return render_template("problem/create.html")
         ans = ""
 
     if qtype == "Select":
@@ -604,8 +598,8 @@ def createproblem():
     qtype = request.form.get("type")
 
     if not qtype or qtype not in ['MC', 'TF', 'Drop', 'Blank', 'Select']:
-        flash("You did not fill all required fields", "danger"), 400
-        return render_template("problem/create.html")
+        flash("You did not fill all required fields", "danger")
+        return render_template("problem/create.html"), 400
 
     question = request.form.get("question")
     difficulty = request.form.get("difficulty")
@@ -613,8 +607,8 @@ def createproblem():
     draft = 1 if request.form.get("draft") else 0
 
     if not question or not difficulty or not category:
-        flash("You did not fill all required fields", "danger"), 400
-        return render_template("problem/create.html")
+        flash("You did not fill all required fields", "danger")
+        return render_template("problem/create.html"), 400
 
     ans = request.form.get("ans")
     a = request.form.get("a")
@@ -622,22 +616,15 @@ def createproblem():
     c = request.form.get("c")
     d = request.form.get("d")
 
-    if qtype == "MC" or qtype == "Drop":
-        if not ans or not a or not b or not c or not d:
-            flash("You did not fill all required fields", "danger"), 400
-            return render_template("problem/create.html")
+    if not check_problem(qtype, ans, a, b, c, d):
+        flash("You did not fill all required fields", "danger")
+        return render_template("problem/create.html"), 400
 
     if qtype == "TF":
-        if not ans or not a or not b:
-            flash("You did not fill all required fields", "danger"), 400
-            return render_template("problem/create.html")
         c = None
         d = None
 
     if qtype == "Blank":
-        if not a:
-            flash("You did not fill all required fields", "danger"), 400
-            return render_template("problem/create.html")
         ans = ""
 
     if qtype == "Select":
@@ -714,7 +701,7 @@ def reset_password():
     db.execute("UPDATE users SET password=:p WHERE id=:id",
                p=generate_password_hash(password), id=user_id)
 
-    flash("Password for " + user[0]["username"] + 
+    flash("Password for " + user[0]["username"] +
           " resetted! Their new password is " + password, "success")
     return redirect("/admin/users")
 
@@ -837,8 +824,8 @@ def quiz_results():
             flash("Do not modify the quiz!", "danger")
             return redirect("/quiz")
 
-        if (data[0]["type"] == "MC" or 
-                data[0]["type"] == "Drop" or 
+        if (data[0]["type"] == "MC" or
+                data[0]["type"] == "Drop" or
                 data[0]["type"] == "TF"):
             if data[0]["correct"] == answer[1]:
                 correct += 1

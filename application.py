@@ -1,7 +1,5 @@
-import os
 import sys
 import logging
-import shutil
 from datetime import datetime, timedelta
 from tempfile import mkdtemp
 
@@ -108,7 +106,7 @@ def login():
         flash('You are banned! Please message an admin to appeal the ban', 'danger')
         return render_template("auth/login.html"), 403
     if not rows[0]["verified"]:
-        flash('You have not confirmed your account yet. Please check your email', 'danger')
+        flash('Your account has not been confirmed. Please check your email', 'danger')
         return render_template("auth/login.html"), 403
 
     # 2fa verification via email
@@ -125,7 +123,8 @@ def login():
         text = render_template('email/confirm_login_text.txt',
                                username=username, token=token)
 
-        send_email('Confirm Your NAME Login', app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
+        send_email('Confirm Your NAME Login',
+                   app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
         flash('A login confirmation email has been sent to the email address you provided. Be sure to check your spam folder!', 'success')
         return render_template("auth/login.html")
@@ -203,12 +202,13 @@ def register():
     send_email('Confirm Your NAME Account',
                app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
-    db.execute("INSERT INTO users(username, password, email, join_date) VALUES(:username, :password, :email, datetime('now'))",
+    db.execute(("INSERT INTO users(username, password, email, join_date) VALUES(:username, :password, :email, datetime('now'))"),
                username=username,
                password=generate_password_hash(password),
                email=email)
 
-    flash('An account creation confirmation email has been sent to the email address you provided. Be sure to check your spam folder!', 'success')
+    flash(("An account creation confirmation email has been sent to the email address "
+           "you provided. Be sure to check your spam folder!"), 'success')
     return render_template("auth/register.html")
 
 
@@ -240,6 +240,7 @@ def confirm_register(token):
     session["admin"] = False  # Ensure no one can get admin right after registering
 
     return redirect("/")
+
 
 @app.route('/confirmlogin/<token>')
 def confirm_login(token):
@@ -360,7 +361,8 @@ def forgotpassword():
         send_email('Reset Your NAME Password',
                    app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
-    flash('If there is an account associated with that email, a password reset email has been sent', 'success')
+    flash(("If there is an account associated with that email, a password reset email "
+           "has been sent"), 'success')
     return render_template("auth/forgotpassword.html")
 
 
@@ -374,7 +376,8 @@ def reset_password_user(token):
         sys.stderr.write(str(e))
         user_id = 0
 
-    if not user_id or datetime.strptime(token["expiration"], "%Y-%m-%dT%H:%M:%S.%f") < datetime.utcnow():
+    if not user_id or datetime.strptime(
+                        token["expiration"], "%Y-%m-%dT%H:%M:%S.%f") < datetime.utcnow():
         flash('Password reset link expired/invalid', 'danger')
         return redirect('/forgotpassword')
 
@@ -404,15 +407,17 @@ def reset_password_user(token):
 @app.route('/problems')
 @admin_required
 def problems():
+    data = db.execute("SELECT * FROM problems WHERE draft=0 ORDER BY id ASC")
     return render_template('problem/problems.html',
-                           data=db.execute("SELECT * FROM problems WHERE draft=0 ORDER BY id ASC"))
+                           data=data)
 
 
 @app.route('/problems/draft')
 @admin_required
 def draft_problems():
+    data = db.execute("SELECT * FROM problems WHERE draft=1 ORDER BY id ASC")
     return render_template('problem/draft_problems.html',
-                           data=db.execute("SELECT * FROM problems WHERE draft=1 ORDER BY id ASC"))
+                           data=data)
 
 
 @app.route('/problem/<problem_id>')
@@ -443,7 +448,7 @@ def problem(problem_id):
         sub_data['percentage'] = "{p:.2f}%".format(p=correct_subs/len(raw_sub_data)*100)
         sub_data['total_subs'] = str(len(raw_sub_data))
         sub_data['correct_subs'] = str(correct_subs)
-    
+
     if request.method == "GET":
         return render_template('problem/problem.html', data=data[0], sub_data=sub_data)
 
@@ -520,7 +525,8 @@ def editproblem(problem_id):
         for letter in all_ans:
             ans += letter
 
-    db.execute("UPDATE problems SET description=?, a=?, b=?, c=?, d=?, correct=?, category=?, difficulty=? WHERE id=?",
+    db.execute(("UPDATE problems SET description=?, a=?, b=?, c=?, d=?, correct=?, "
+                "category=?, difficulty=? WHERE id=?"),
                question, a, b, c, d, ans, category, difficulty, problem_id)
 
     flash('Problem successfully edited', 'success')
@@ -567,12 +573,13 @@ def admin_submissions():
 
     # Query database for submissions
     if len(args) == 0:
-        submissions = db.execute(
-            "SELECT submissions.*, users.username FROM submissions LEFT JOIN users ON user_id=users.id")
+        submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
+                                  "LEFT JOIN users ON user_id=users.id"))
     else:
         modifier = modifier[:-4]
-        submissions = db.execute(
-            "SELECT submissions.*, users.username FROM submissions LEFT JOIN users ON user_id=users.id " + modifier, *args)
+        submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
+                                  "LEFT JOIN users ON user_id=users.id ") + modifier,
+                                  *args)
 
     return render_template("admin/submissions.html", data=submissions)
 
@@ -590,7 +597,7 @@ def createproblem():
         return render_template("problem/create.html")
 
     # Reached via POST
-    
+
     # get inputs & validate them
     qtype = request.form.get("type")
 
@@ -637,8 +644,9 @@ def createproblem():
         for letter in all_ans:
             ans += letter
 
-    db.execute("INSERT INTO problems (type, description, a, b, c, d, correct, category, difficulty, draft) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-               qtype, question, a, b, c, d, ans, category, difficulty, draft)
+    db.execute(("INSERT INTO problems (type, description, a, b, c, d, correct, category, "
+                "difficulty, draft) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"),
+                qtype, question, a, b, c, d, ans, category, difficulty, draft)
 
     problem_id = db.execute("SELECT * FROM problems ORDER BY id DESC LIMIT 1")[0]["id"]
 
@@ -704,7 +712,8 @@ def reset_password():
     db.execute("UPDATE users SET password=:p WHERE id=:id",
                p=generate_password_hash(password), id=user_id)
 
-    flash("Password for " + user[0]["username"] + " resetted! Their new password is " + password, "success")
+    flash("Password for " + user[0]["username"] +
+          " resetted! Their new password is " + password, "success")
     return redirect("/admin/users")
 
 
@@ -757,7 +766,8 @@ def maintenance():
 
 @app.route("/quiz")
 def quiz():
-    questions = db.execute("SELECT * FROM problems WHERE draft=0 AND deleted=0 ORDER BY RANDOM() LIMIT 5")
+    questions = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted=0 "
+                            "ORDER BY RANDOM() LIMIT 5"))
 
     return render_template("quiz.html", questions=questions)
 
@@ -771,13 +781,16 @@ def quiz_results():
             return redirect("/quiz")
 
         # Get details about the submission to display to the user
-        sub = db.execute("SELECT submissions.*, users.username FROM submissions LEFT JOIN users ON user_id=users.id WHERE submissions.id=:id", id=sub_id)
+        sub = db.execute(("SELECT submissions.*, users.username FROM submissions "
+                          "LEFT JOIN users ON user_id=users.id WHERE submissions.id=:id"),
+                          id=sub_id)
 
         if len(sub) == 0:
             flash("This submission doesn't exist", "danger")
             return redirect("/quiz")
 
-        sub_data = db.execute("SELECT * FROM submissions_data JOIN problems ON problem_id=problems.id WHERE sub_id=:id ", id=request.args.get("id"))
+        sub_data = db.execute(("SELECT * FROM submissions_data JOIN problems ON "
+                               "problem_id=problems.id WHERE sub_id=:id"), id=sub_id)
 
         return render_template("quizresults.html", sub=sub[0], sub_data=sub_data)
 
@@ -810,7 +823,8 @@ def quiz_results():
             uid = session["user_id"]
 
     # Create blank submission & get unique ID
-    db.execute("INSERT INTO submissions (user_id, score, date) VALUES(-1, 0, datetime('now'))")
+    db.execute(("INSERT INTO submissions (user_id, score, date) "
+                "VALUES(-1, 0, datetime('now'))"))
     subid = db.execute("SELECT id FROM submissions ORDER BY id DESC LIMIT 1")[0]["id"]
 
     # Check answers
@@ -821,14 +835,16 @@ def quiz_results():
             flash("Do not modify the quiz!", "danger")
             return redirect("/quiz")
 
-        if data[0]["type"] == "MC" or data[0]["type"] == "Drop" or data[0]["type"] == "TF":
+        if (data[0]["type"] == "MC" or
+            data[0]["type"] == "Drop" or
+            data[0]["type"] == "TF"):
             if data[0]["correct"] == answer[1]:
                 correct += 1
                 db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                    subid, data[0]["id"], answer[1], 1)
+                           subid, data[0]["id"], answer[1], 1)
             else:
                 db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                    subid, data[0]["id"], answer[1], 0)
+                           subid, data[0]["id"], answer[1], 0)
         elif data[0]["type"] == "Blank":
             accepts = [data[0]["a"], data[0]["b"], data[0]["c"], data[0]["d"]]
             for i in range(len(accepts) - 1, -1, -1):
@@ -837,10 +853,10 @@ def quiz_results():
             if answer[1] in accepts:
                 correct += 1
                 db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                    subid, data[0]["id"], answer[1], 1)
+                           subid, data[0]["id"], answer[1], 1)
             else:
                 db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                    subid, data[0]["id"], answer[1], 0)
+                           subid, data[0]["id"], answer[1], 0)
         elif data[0]["type"] == "Select":
             e = ""
             for letter in answer[1]:
@@ -851,10 +867,10 @@ def quiz_results():
             if data[0]["correct"] == e:
                 correct += 1
                 db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                    subid, data[0]["id"], e, 1)
+                           subid, data[0]["id"], e, 1)
             else:
                 db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                    subid, data[0]["id"], e, 0)
+                           subid, data[0]["id"], e, 0)
 
     db.execute("UPDATE submissions SET user_id=?, score=? WHERE id=?",
                uid, correct, subid)

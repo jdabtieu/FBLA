@@ -44,6 +44,7 @@ csrf = CSRFProtect(app)
 csrf.init_app(app)
 
 
+# Ensure that during maintenance mode, non-admins cannot access the site
 @app.before_request
 def check_for_maintenance():
     global maintenance_mode
@@ -87,29 +88,30 @@ def login():
 
     # Reached using POST
 
+    username = request.form.get("username")
+    password = request.form.get("password")
+
     # Ensure username and password were submitted
-    if not request.form.get("username") or not request.form.get("password"):
+    if not username or not password:
         flash('Username and password cannot be blank', 'danger')
         return render_template("auth/login.html"), 400
 
     # Ensure username exists and password is correct
     rows = db.execute("SELECT * FROM users WHERE username = :username",
                       username=request.form.get("username"))
-    if len(rows) != 1 or not check_password_hash(rows[0]["password"], request.form.get("password")):
+    if len(rows) != 1 or not check_password_hash(rows[0]["password"], password):
         flash('Incorrect username/password', 'danger')
         return render_template("auth/login.html"), 401
 
-    # Ensure user is not banned
+    # Ensure user is not banned and has confirmed their account
     if rows[0]["banned"]:
         flash('You are banned! Please message an admin to appeal the ban', 'danger')
         return render_template("auth/login.html"), 403
-
-    # Ensure user has confirmed account
     if not rows[0]["verified"]:
         flash('You have not confirmed your account yet. Please check your email', 'danger')
         return render_template("auth/login.html"), 403
 
-    # implement 2fa verification via email
+    # 2fa verification via email
     if rows[0]["twofa"]:
         exp = datetime.utcnow() + timedelta(seconds=1800)
         email = rows[0]["email"]
@@ -121,7 +123,7 @@ def login():
             algorithm='HS256'
         ).decode('utf-8')
         text = render_template('email/confirm_login_text.txt',
-                               username=request.form.get('username'), token=token)
+                               username=username, token=token)
 
         send_email('Confirm Your NAME Login', app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
@@ -152,36 +154,41 @@ def register():
 
     # Reached using POST
 
+    username = request.form.get("username")
+    password = request.form.get("password")
+    confirmation = request.form.get("confirmation")
+    email = request.form.get("email")
+
     # Ensure username is valid
-    if not request.form.get("username"):
+    if not username:
         flash('Username cannot be blank', 'danger')
         return render_template("auth/register.html"), 400
-    if not verify_text(request.form.get("username")):
+    if not verify_text(username):
         flash('Invalid username', 'danger')
         return render_template("auth/register.html"), 400
 
-    # Ensure password is not blank
-    if not request.form.get("password") or len(request.form.get("password")) < 8:
+    # Ensure password is valid
+    if not password or len(password) < 8:
         flash('Password must be at least 8 characters', 'danger')
         return render_template("auth/register.html"), 400
-    if not request.form.get("confirmation") or request.form.get("password") != request.form.get("confirmation"):
+    if not confirmation or password != confirmation:
         flash('Passwords do not match', 'danger')
         return render_template("auth/register.html"), 400
 
     # Ensure username and email do not already exist
-    rows = db.execute("SELECT * FROM users WHERE username = :username",
-                      username=request.form.get("username"))
+    rows = db.execute("SELECT * FROM users WHERE username=:username",
+                      username=username)
     if len(rows) > 0:
         flash('Username already exists', 'danger')
         return render_template("auth/register.html"), 409
-    rows = db.execute("SELECT * FROM users WHERE email = :email",
+    rows = db.execute("SELECT * FROM users WHERE email=:email",
                       email=request.form.get("email"))
     if len(rows) > 0:
         flash('Email already exists', 'danger')
         return render_template("auth/register.html"), 409
 
+    # Send confirmation email
     exp = datetime.utcnow() + timedelta(seconds=1800)
-    email = request.form.get('email')
     token = jwt.encode(
         {
             'email': email,
@@ -191,15 +198,15 @@ def register():
         algorithm='HS256'
     ).decode('utf-8')
     text = render_template('email/confirm_account_text.txt',
-                           username=request.form.get('username'), token=token)
-
-    db.execute("INSERT INTO users(username, password, email, join_date) VALUES(:username, :password, :email, datetime('now'))",
-               username=request.form.get("username"),
-               password=generate_password_hash(request.form.get("password")),
-               email=request.form.get("email"))
+                           username=username, token=token)
 
     send_email('Confirm Your NAME Account',
                app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
+
+   db.execute("INSERT INTO users(username, password, email, join_date) VALUES(:username, :password, :email, datetime('now'))",
+               username=username,
+               password=generate_password_hash(password),
+               email=email)
 
     flash('An account creation confirmation email has been sent to the email address you provided. Be sure to check your spam folder!', 'success')
     return render_template("auth/register.html")
@@ -207,11 +214,13 @@ def register():
 
 @app.route('/confirmregister/<token>')
 def confirm_register(token):
+    # Decode token
     try:
         token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
     except Exception as e:
         sys.stderr.write(str(e))
         token = 0
+
     if not token:
         flash("Email verification link invalid", "danger")
         return redirect("/register")
@@ -228,12 +237,13 @@ def confirm_register(token):
         "SELECT * FROM users WHERE email=:email", email=token['email'])[0]
     session["user_id"] = user["id"]
     session["username"] = user["username"]
-    session["admin"] = False  # ensure no one can get admin right after registering
+    session["admin"] = False  # Ensure no one can get admin right after registering
 
-    return redirect("/problem/helloworld")
+    return redirect("/")
 
 @app.route('/confirmlogin/<token>')
 def confirm_login(token):
+    # Decode token
     try:
         token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
     except Exception as e:
@@ -271,26 +281,30 @@ def changepassword():
 
     # Reached using POST
 
+    old_password = request.form.get("password")
+    new_password = request.form.get("newPassword")
+    confirmation = request.form.get("confirmation")
+
     # Ensure passwords were submitted and they match
-    if not request.form.get("password"):
+    if not old_password:
         flash('Password cannot be blank', 'danger')
         return render_template("auth/changepassword.html"), 400
-    if not request.form.get("newPassword") or len(request.form.get("newPassword")) < 8:
+    if not new_password or len(new_password) < 8:
         flash('New password must be at least 8 characters', 'danger')
         return render_template("auth/changepassword.html"), 400
-    if not request.form.get("confirmation") or request.form.get("newPassword") != request.form.get("confirmation"):
+    if not confirmation or new_password != confirmation:
         flash('Passwords do not match', 'danger')
         return render_template("auth/changepassword.html"), 400
 
     # Ensure username exists and password is correct
     rows = db.execute("SELECT * FROM users WHERE id=:id",
                       id=session["user_id"])
-    if len(rows) != 1 or not check_password_hash(rows[0]["password"], request.form.get("password")):
+    if len(rows) != 1 or not check_password_hash(rows[0]["password"], old_password):
         flash('Incorrect password', 'danger')
         return render_template("auth/changepassword.html"), 401
 
     db.execute("UPDATE users SET password=:new WHERE id=:id",
-               new=generate_password_hash(request.form.get("newPassword")),
+               new=generate_password_hash(new_password),
                id=session["user_id"])
 
     flash("Password change successful", "success")
@@ -322,13 +336,14 @@ def forgotpassword():
     # Reached via POST
 
     email = request.form.get("email")
+
+    # Ensure email was submitted
     if not email:
         flash('Email cannot be blank', 'danger')
         return render_template("auth/forgotpassword.html"), 400
 
     rows = db.execute("SELECT * FROM users WHERE email=:email",
                       email=request.form.get("email"))
-
     if len(rows) == 1:
         exp = datetime.utcnow() + timedelta(seconds=1800)
         token = jwt.encode(
@@ -342,7 +357,7 @@ def forgotpassword():
         text = render_template('email/reset_password_text.txt',
                                username=rows[0]["username"], token=token)
 
-        send_email('Reset Your CTF Password',
+        send_email('Reset Your NAME Password',
                    app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
     flash('If there is an account associated with that email, a password reset email has been sent', 'success')
@@ -351,12 +366,14 @@ def forgotpassword():
 
 @app.route('/resetpassword/<token>', methods=['GET', 'POST'])
 def reset_password_user(token):
+    # Decode token
     try:
         token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
         user_id = token['user_id']
     except Exception as e:
         sys.stderr.write(str(e))
         user_id = 0
+
     if not user_id or datetime.strptime(token["expiration"], "%Y-%m-%dT%H:%M:%S.%f") < datetime.utcnow():
         flash('Password reset link expired/invalid', 'danger')
         return redirect('/forgotpassword')
@@ -364,15 +381,21 @@ def reset_password_user(token):
     if request.method == "GET":
         return render_template('auth/resetpassword.html')
 
-    if not request.form.get("password") or len(request.form.get("password")) < 8:
+    # Reached via POST
+
+    password = request.form.get("password")
+    confirmation = request.form.get("confirmation")
+
+    # Ensure passwords match and are valid
+    if not password or len(password) < 8:
         flash('New password must be at least 8 characters', 'danger')
         return render_template("auth/resetpassword.html"), 400
-    if not request.form.get("confirmation") or request.form.get("password") != request.form.get("confirmation"):
+    if not confirmation or password != confirmation:
         flash('Passwords do not match', 'danger')
         return render_template("auth/resetpassword.html"), 400
 
     db.execute("UPDATE users SET password=:new WHERE id=:id",
-               new=generate_password_hash(request.form.get("password")), id=user_id)
+               new=generate_password_hash(password), id=user_id)
 
     flash('Your password has been successfully reset', 'success')
     return redirect("/login")
@@ -402,29 +425,30 @@ def problem(problem_id):
     if len(data) != 1:
         return render_template("problem/problem_noexist.html"), 404
 
+    # Get problem statistics
     raw_sub_data = db.execute("SELECT * FROM submissions_data WHERE problem_id=?",
                               problem_id)
 
     sub_data = dict()
 
-    tmp = 0
+    correct_subs = 0
     for item in raw_sub_data:
-        tmp += 1 if item['correct'] else 0
+        correct_subs += 1 if item['correct'] else 0
 
     if len(raw_sub_data) == 0:
         sub_data['percentage'] = 'No submissions yet'
         sub_data['total_subs'] = 'No submissions yet'
         sub_data['correct_subs'] = 'No submissions yet'
     else:
-        sub_data['percentage'] = "{p:.2f}%".format(p=tmp / len(raw_sub_data) * 100)
+        sub_data['percentage'] = "{p:.2f}%".format(p=correct_subs/len(raw_sub_data)*100)
         sub_data['total_subs'] = str(len(raw_sub_data))
-        sub_data['correct_subs'] = str(tmp)
+        sub_data['correct_subs'] = str(correct_subs)
     
     if request.method == "GET":
         return render_template('problem/problem.html', data=data[0], sub_data=sub_data)
 
 
-@app.route('/problem/<problem_id>/publish')
+@app.route('/problem/<problem_id>/publish', methods=["POST"])
 @admin_required
 def publish_problem(problem_id):
     data = db.execute("SELECT * FROM problems WHERE id=:pid",
@@ -455,6 +479,7 @@ def editproblem(problem_id):
 
     # Reached via POST
 
+    # Get inputs & validate based on question type
     qtype = data[0]["type"]
 
     question = request.form.get("question")
@@ -516,6 +541,7 @@ def delete_problem(problem_id):
     flash('Problem successfully deleted', 'success')
     return redirect("/problems")
 
+
 @app.route("/admin/console")
 @admin_required
 def admin_console():
@@ -527,10 +553,6 @@ def admin_console():
 @admin_required
 def admin_submissions():
     submissions = None
-    page = request.args.get("page")
-    if not page:
-        page = 1
-    page = int(page) - 1
 
     modifier = "WHERE"
     args = []
@@ -543,14 +565,14 @@ def admin_submissions():
         modifier += " score=? AND"
         args.insert(len(args), request.args.get("score"))
 
+    # Query database for submissions
     if len(args) == 0:
         submissions = db.execute(
-            "SELECT submissions.*, users.username FROM submissions LEFT JOIN users ON user_id=users.id LIMIT 50 OFFSET ?", 50 * page)
+            "SELECT submissions.*, users.username FROM submissions LEFT JOIN users ON user_id=users.id")
     else:
         modifier = modifier[:-4]
-        args.append(50 * page)
         submissions = db.execute(
-            "SELECT submissions.*, users.username FROM submissions LEFT JOIN users ON user_id=users.id " + modifier + " LIMIT 50 OFFSET ?", *args)
+            "SELECT submissions.*, users.username FROM submissions LEFT JOIN users ON user_id=users.id " + modifier, *args)
 
     return render_template("admin/submissions.html", data=submissions)
 
@@ -569,6 +591,7 @@ def createproblem():
 
     # Reached via POST
     
+    # get inputs & validate them
     qtype = request.form.get("type")
 
     if not qtype or qtype not in ['MC', 'TF', 'Drop', 'Blank', 'Select']:
@@ -626,6 +649,7 @@ def createproblem():
 @app.route("/admin/ban", methods=["POST"])
 @admin_required
 def ban():
+    # Ensure user exists
     user_id = request.form.get("user_id")
     if not user_id:
         flash("Must provide user ID", "danger")
@@ -640,6 +664,7 @@ def ban():
     user_id = int(user_id)
     user = user[0]
 
+    # Ensure users can't ban themselves or other admins
     if user_id == session["user_id"]:
         flash("Cannot ban yourself", "danger")
         return redirect("/admin/users")
@@ -662,6 +687,7 @@ def ban():
 @app.route("/admin/resetpass", methods=["POST"])
 @admin_required
 def reset_password():
+    # Ensure user exists
     user_id = request.form.get("user_id")
     if not user_id:
         flash("Must provide user ID", "danger")
@@ -673,6 +699,7 @@ def reset_password():
         flash("That user doesn't exist", "danger")
         return redirect("/admin/users")
 
+    # Generate new password
     password = generate_password()
     db.execute("UPDATE users SET password=:p WHERE id=:id",
                p=generate_password_hash(password), id=user_id)
@@ -684,6 +711,7 @@ def reset_password():
 @app.route("/admin/makeadmin", methods=["POST"])
 @admin_required
 def makeadmin():
+    # Ensure user exists
     user_id = request.form.get("user_id")
     if not user_id:
         flash("Must provide user ID", "danger")
@@ -698,6 +726,7 @@ def makeadmin():
     user_id = int(user_id)
     admin_status = user[0]["admin"]
 
+    # Prevent admins from revoking admin status (except super-admin)
     if admin_status and session["user_id"] != 1:
         flash("Only the super-admin can revoke admin status", "danger")
         return redirect("/admin/users")
@@ -728,7 +757,7 @@ def maintenance():
 
 @app.route("/quiz")
 def quiz():
-    questions = db.execute("SELECT * FROM problems WHERE DRAFT=0 AND DELETED=0 ORDER BY RANDOM() LIMIT 5")
+    questions = db.execute("SELECT * FROM problems WHERE draft=0 AND deleted=0 ORDER BY RANDOM() LIMIT 5")
 
     return render_template("quiz.html", questions=questions)
 
@@ -741,6 +770,7 @@ def quiz_results():
             flash("Missing quiz ID", "danger")
             return redirect("/quiz")
 
+        # Get details about the submission to display to the user
         sub = db.execute("SELECT submissions.*, users.username FROM submissions LEFT JOIN users ON user_id=users.id WHERE submissions.id=:id", id=sub_id)
 
         if len(sub) == 0:
@@ -753,37 +783,44 @@ def quiz_results():
 
     # Reached via POST
 
+    # Parse answers for processing
     answers = []
     for item in request.form:
         orig = request.form.getlist(item)
-        if len(orig) > 1:
+        if len(orig) > 1:  # Dealing with multiple-select
             ans = ""
             for e in orig:
                 ans += e.split("_")[1]
             answers.append((item, ans))
-            continue
-        split = request.form.get(item).split("_")
-        if item == "csrf_token":
-            continue
-        if len(split) == 2:
-            answers.append((split[0], split[1]))
-        if len(split) == 1:
-            answers.append((item, split[0]))
+        else:  # Dealing with single-answer
+            split = request.form.get(item).split("_")
+            if item == "csrf_token":
+                continue
+            if len(split) == 2:
+                answers.append((split[0], split[1]))
+            if len(split) == 1:
+                answers.append((item, split[0]))
 
     correct = 0
+
+    # Check if user is logged in
     uid = None
     if session:
         if "user_id" in session:
             uid = session["user_id"]
 
+    # Create blank submission & get unique ID
     db.execute("INSERT INTO submissions (user_id, score, date) VALUES(-1, 0, datetime('now'))")
     subid = db.execute("SELECT id FROM submissions ORDER BY id DESC LIMIT 1")[0]["id"]
 
+    # Check answers
     for answer in answers:
         data = db.execute("SELECT * FROM problems WHERE id=?", answer[0])
+        # Ensure user has not injected a fake problem
         if len(data) == 0:
             flash("Do not modify the quiz!", "danger")
             return redirect("/quiz")
+
         if data[0]["type"] == "MC" or data[0]["type"] == "Drop" or data[0]["type"] == "TF":
             if data[0]["correct"] == answer[1]:
                 correct += 1
@@ -804,13 +841,12 @@ def quiz_results():
             else:
                 db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
                     subid, data[0]["id"], answer[1], 0)
-
         elif data[0]["type"] == "Select":
             e = ""
             for letter in answer[1]:
                 e += letter
 
-            e = e[:-1]
+            e = e[:-1]  # Remove anti-blank token
 
             if data[0]["correct"] == e:
                 correct += 1
@@ -820,7 +856,8 @@ def quiz_results():
                 db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
                     subid, data[0]["id"], e, 0)
 
-    db.execute("UPDATE submissions SET user_id=?, score=? WHERE id=?", uid, correct, subid)
+    db.execute("UPDATE submissions SET user_id=?, score=? WHERE id=?",
+               uid, correct, subid)
 
     return redirect("/quiz/results?id=" + str(subid))
 
@@ -830,10 +867,6 @@ def quiz_results():
 @login_required
 def user_submissions():
     submissions = None
-    page = request.args.get("page")
-    if not page:
-        page = 1
-    page = int(page) - 1
 
     modifier = ""
     args = []
@@ -842,14 +875,14 @@ def user_submissions():
         modifier += " AND score=?"
         args.insert(len(args), request.args.get("score"))
 
+    # Query database for submissions
     if len(args) == 0:
         submissions = db.execute(
-            "SELECT * FROM submissions WHERE user_id=? GROUP BY id LIMIT 50 OFFSET ?", session["user_id"], 50 * page)
+            "SELECT * FROM submissions WHERE user_id=?", session["user_id"])
     else:
         args.insert(0, session["user_id"])
-        args.append(50 * page)
         submissions = db.execute(
-            "SELECT * FROM submissions WHERE user_id=?" + modifier + " GROUP BY submissions.id LIMIT 50 OFFSET ?", *args)
+            "SELECT * FROM submissions WHERE user_id=?" + modifier, *args)
 
     return render_template("submissions.html", data=submissions)
 
@@ -869,6 +902,7 @@ for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
 
 
+# HTTP 418 error easter egg
 @app.route("/teapot")
 def teapot():
     return render_template("error/418.html"), 418

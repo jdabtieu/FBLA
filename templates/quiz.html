@@ -30,7 +30,7 @@
                 {% endfor %}
             {% elif question["type"] == "Blank" %}
                     <input
-                        name="{{ question['id'] }}"
+                        name="{{ question['id'] }}_blank"
                         placeholder="Fill in the Blank"
                         required>
             {% elif question["type"] == "Select" %}

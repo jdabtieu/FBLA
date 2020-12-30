@@ -504,8 +504,8 @@ def editproblem(problem_id):
     d = request.form.get("d")
 
     if not check_problem(qtype, ans, a, b, c, d):
-            flash("You did not fill all required fields", "danger")
-            return render_template("problem/create.html"), 400
+        flash("You did not fill all required fields", "danger")
+        return render_template("problem/create.html"), 400
 
     # Extra steps for storage of different question types
     if qtype == "TF":
@@ -786,22 +786,7 @@ def quiz_results():
     # Reached via POST
 
     # Parse answers for processing
-    answers = []
-    for item in request.form:
-        orig = request.form.getlist(item)
-        if len(orig) > 1:  # Dealing with multiple-select
-            ans = ""
-            for e in orig:
-                ans += e.split("_")[1]
-            answers.append((item, ans))
-        else:  # Dealing with single-answer
-            split = request.form.get(item).split("_")
-            if item == "csrf_token":
-                continue
-            if len(split) == 2:
-                answers.append((split[0], split[1]))
-            if len(split) == 1:
-                answers.append((item, split[0]))
+    answers = parse_quiz_answers(request.form)
 
     correct = 0
 

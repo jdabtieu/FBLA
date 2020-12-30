@@ -55,6 +55,7 @@ def verify_text(text):
     """
     return bool(re.match(r'^[\w\-]+$', text))
 
+
 def check_problem(qtype, ans, a, b, c, d):
     """
     Check if a problem contains all required fields based on the question type
@@ -85,3 +86,27 @@ def check_problem(qtype, ans, a, b, c, d):
 
     # Failsafe for any unrecognized problem types
     return False
+
+
+def parse_quiz_answers(form):
+    """
+    Parses the answers from a quiz and returns them as an array of tuples
+    """
+    answers = []
+    for item in form:
+        list_answer = form.getlist(item)
+        if len(list_answer) > 1:  # Dealing with multiple-select
+            ans = ""
+            for answer in list_answer:
+                ans += answer.split("_")[1]
+            answers.append((item, ans))
+        else:  # Dealing with single-answer
+            split = form.get(item).split("_")
+            if item == "csrf_token":  # Ignore the CSRF token
+                continue
+            if "blank" in item:  # Dealing with fill in the blank
+                answers.append((item.split("_")[0], form.get(item)))
+            elif len(split) == 2:  # Dealing with select questions
+                answers.append((item, split[1]))
+
+    return answers

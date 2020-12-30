@@ -761,39 +761,36 @@ def quiz():
     return render_template("quiz.html", questions=questions)
 
 
-@app.route("/quiz/results", methods=["GET", "POST"])
+@app.route("/quiz/results")
 def quiz_results():
-    if request.method == "GET":
-        sub_id = request.args.get("id")
-        if not sub_id:
-            flash("Missing quiz ID", "danger")
-            return redirect("/quiz")
+    sub_id = request.args.get("id")
+    if not sub_id:
+        flash("Missing quiz ID", "danger")
+        return redirect("/quiz")
 
-        # Get details about the submission to display to the user
-        sub = db.execute(("SELECT submissions.*, users.username FROM submissions "
-                          "LEFT JOIN users ON user_id=users.id WHERE submissions.id=:id"),
-                         id=sub_id)
+    # Get details about the submission to display to the user
+    sub = db.execute(("SELECT submissions.*, users.username FROM submissions "
+                      "LEFT JOIN users ON user_id=users.id WHERE submissions.id=:id"),
+                     id=sub_id)
 
-        if len(sub) == 0:
-            flash("This submission doesn't exist", "danger")
-            return redirect("/quiz")
+    if len(sub) == 0:
+        flash("This submission doesn't exist", "danger")
+        return redirect("/quiz")
 
-        sub_data = db.execute(("SELECT * FROM submissions_data JOIN problems ON "
-                               "problem_id=problems.id WHERE sub_id=:id"), id=sub_id)
+    sub_data = db.execute(("SELECT * FROM submissions_data JOIN problems ON "
+                           "problem_id=problems.id WHERE sub_id=:id"), id=sub_id)
 
-        return render_template("quizresults.html", sub=sub[0], sub_data=sub_data)
+    return render_template("quizresults.html", sub=sub[0], sub_data=sub_data)
 
-    # Reached via POST
 
-    # Parse answers for processing
+@app.route("/quiz/submit", methods=["POST"])
+def quiz_submit():
     answers = parse_quiz_answers(request.form)
-
     correct = 0
 
     # Check if user is logged in
     uid = None
-    if session:
-        if "user_id" in session:
+    if session and "user_id" in session:
             uid = session["user_id"]
 
     # Create blank submission & get unique ID

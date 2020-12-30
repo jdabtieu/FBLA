@@ -4,7 +4,7 @@
 
 {% block main %}
 <h1>FBLA Quiz</h1>
-<form method="post" action="/quiz/results" autocomplete="off">
+<form method="post" action="/quiz/submit" autocomplete="off">
     {% for question in questions %}
         <div class="form-group">
             <h3>{{ question["description"] }}</h3>

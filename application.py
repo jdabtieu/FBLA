@@ -791,7 +791,7 @@ def quiz_submit():
     # Check if user is logged in
     uid = None
     if session and "user_id" in session:
-            uid = session["user_id"]
+        uid = session["user_id"]
 
     # Create blank submission & get unique ID
     db.execute(("INSERT INTO submissions (user_id, score, date) "
@@ -800,6 +800,8 @@ def quiz_submit():
 
     # Check answers
     for answer in answers:
+        this_correct = False
+        user_ans = answer[1]
         data = db.execute("SELECT * FROM problems WHERE id=?", answer[0])
         # Ensure user has not injected a fake problem
         if len(data) == 0:
@@ -809,40 +811,29 @@ def quiz_submit():
         if (data[0]["type"] == "MC" or
                 data[0]["type"] == "Drop" or
                 data[0]["type"] == "TF"):
-            if data[0]["correct"] == answer[1]:
-                correct += 1
-                db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                           subid, data[0]["id"], answer[1], 1)
-            else:
-                db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                           subid, data[0]["id"], answer[1], 0)
+            this_correct = (data[0]["correct"] == user_ans)
+
         elif data[0]["type"] == "Blank":
-            accepts = [data[0]["a"], data[0]["b"], data[0]["c"], data[0]["d"]]
-            for i in range(len(accepts) - 1, -1, -1):
-                if not accepts[i]:
-                    accepts.pop(i)
-            if answer[1] in accepts:
-                correct += 1
-                db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                           subid, data[0]["id"], answer[1], 1)
-            else:
-                db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                           subid, data[0]["id"], answer[1], 0)
+            accepts = []
+            for letter in "abcd":
+                if data[0][letter]:
+                    accepts.append(data[0][letter])
+            this_correct = (user_ans in accepts)
+
         elif data[0]["type"] == "Select":
-            e = ""
-            for letter in answer[1]:
-                e += letter
+            user_ans = answer[1][:-1]  # Remove anti-blank token
+            this_correct = (data[0]["correct"] == user_ans)
 
-            e = e[:-1]  # Remove anti-blank token
+        # Insert this problem into submissions data
+        if this_correct:
+            correct += 1
+            db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
+                       subid, data[0]["id"], user_ans, 1)
+        else:
+            db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
+                       subid, data[0]["id"], user_ans, 0)
 
-            if data[0]["correct"] == e:
-                correct += 1
-                db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                           subid, data[0]["id"], e, 1)
-            else:
-                db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                           subid, data[0]["id"], e, 0)
-
+    # Update score & user_id of submission
     db.execute("UPDATE submissions SET user_id=?, score=? WHERE id=?",
                uid, correct, subid)
 

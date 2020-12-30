@@ -76,6 +76,11 @@ def terms():
     return render_template("terms.html")
 
 
+@app.route("/help")
+def help():
+    return render_template("help.html")
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     # Forget user id

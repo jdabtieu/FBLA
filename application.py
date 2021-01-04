@@ -590,8 +590,8 @@ def admin_submissions():
                                     + modifier, *args))
         args.append(page)
         submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
-                                  "LEFT JOIN users ON user_id=users.id ") + modifier +
-                                  " LIMIT 50 OFFSET ?", *args)
+                                 f"LEFT JOIN users ON user_id=users.id {modifier}"
+                                  " LIMIT 50 OFFSET ?"), *args)
 
     return render_template("admin/submissions.html",
                            data=submissions, sub_length=-(-sub_length // 50))

@@ -62,29 +62,21 @@ def check_problem(qtype, ans, a, b, c, d):
     """
     # Multiple Choice & Dropdown should have all 4 choices
     if qtype == "MC" or qtype == "Drop":
-        if not ans or not a or not b or not c or not d:
-            return False
-        return True
+        return ans and a and b and c and d
 
     # True/False should have two fields
     if qtype == "TF":
-        if not ans or not a or not b:
-            return False
-        if not (ans == 'a' or ans == 'b'):
-            return False
-        return True
+        return ans and a and b and (ans == 'a' or ans == 'b')
 
     # Fill in the Blank should have at least one accepted answer
     if qtype == "Blank":
-        if not a:
-            return False
-        return True
+        return bool(a)
 
     # Select All doesn't have any requirements
     if qtype == "Select":
         return True
 
-    # Failsafe for any unrecognized problem types
+    # Return false if question type is unrecognized
     return False
 
 

@@ -844,11 +844,8 @@ def quiz_submit():
         # Insert this problem into submissions data
         if this_correct:
             correct += 1
-            db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                       subid, data[0]["id"], user_ans, 1)
-        else:
-            db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
-                       subid, data[0]["id"], user_ans, 0)
+        db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
+                   subid, data[0]["id"], user_ans, int(this_correct))
 
     # Update score & user_id of submission
     db.execute("UPDATE submissions SET user_id=?, score=? WHERE id=?",

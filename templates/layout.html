@@ -10,7 +10,7 @@
         <script src="/assets/js/jquery.min.js"></script>
         <script src="/assets/js/bootstrap.bundle.min.js"></script>
 
-        <link href="/static/favicon.icon" rel="icon">
+        <link href="/static/favicon.ico" rel="icon">
 
         <title>{% block title %}{% endblock %} | NAME</title>
     </head>
@@ -24,9 +24,11 @@
                 <ul class="navbar-nav mr-auto">
                     <li><a class="nav-link" href="/">Home</a></li>
                     <li><a class="nav-link" href="/quiz">Take Quiz</a></li>
+                    {% if session.username %}
+                        <li><a class="nav-link" href="/submissions">My Quizzes</a></li>
+                    {% endif %}
                     <li><a class="nav-link" href="/help">Help</a></li>
                     {% if session.admin %}
-                        <li><a class="nav-link" href="/problems">View Problems</a></li>
                         <li><a class="nav-link" href="/admin/console">Admin Console</a></li>
                     {% endif %}
                 </ul>           

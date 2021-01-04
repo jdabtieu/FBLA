@@ -30,7 +30,6 @@ db.execute(("CREATE TABLE 'submissions_data' ('sub_id' integer NOT NULL, "
             "'correct' boolean NOT NULL DEFAULT(0))"))
 db.execute("INSERT INTO 'users' VALUES(1, 'admin', ?, ?, datetime('now'), 1, 0, 1, 0)",
            passwd, email)
-db.execute("INSERT INTO 'submissions' VALUES(0, 0, 0, datetime('now'))")
 
 # Configure application
 os.mkdir("logs")

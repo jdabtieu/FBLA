@@ -55,10 +55,10 @@ def check_for_maintenance():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if not session or not session["user_id"]:
+        return render_template("index.html")
 
-    if session["user_id"]:
-        return render_template("logged-in.html")
+    return render_template("logged-in.html")
 
 
 @app.route("/assets/<path:filename>")
@@ -566,23 +566,35 @@ def admin_submissions():
 
     if request.args.get("username"):
         modifier += " username=? AND"
-        args.insert(len(args), request.args.get("username"))
+        args.append(request.args.get("username"))
 
     if request.args.get("score"):
         modifier += " score=? AND"
-        args.insert(len(args), request.args.get("score"))
+        args.append(request.args.get("score"))
 
-    # Query database for submissions
+    page = request.args.get("page")
+    if not page:
+        page = "1"
+    page = (int(page) - 1) * 50
+
+    # Query database for submissions and get number of submissions for pagination
     if len(args) == 0:
         submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
-                                  "LEFT JOIN users ON user_id=users.id"))
+                                  "LEFT JOIN users ON user_id=users.id LIMIT 50 "
+                                  "OFFSET ?"), page)
+        sub_length = len(db.execute("SELECT * FROM submissions"))
     else:
         modifier = modifier[:-4]
+        sub_length = len(db.execute(("SELECT submissions.*, users.username FROM "
+                                     "submissions LEFT JOIN users ON user_id=users.id ")
+                                    + modifier, *args))
+        args.append(page)
         submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
-                                  "LEFT JOIN users ON user_id=users.id ") + modifier,
-                                 *args)
+                                  "LEFT JOIN users ON user_id=users.id ") + modifier +
+                                  " LIMIT 50 OFFSET ?", *args)
 
-    return render_template("admin/submissions.html", data=submissions)
+    return render_template("admin/submissions.html",
+                           data=submissions, sub_length=-(-sub_length // 50))
 
 
 @app.route("/admin/users")
@@ -858,16 +870,26 @@ def user_submissions():
         modifier += " AND score=?"
         args.insert(len(args), request.args.get("score"))
 
-    # Query database for submissions
+    page = request.args.get("page")
+    if not page:
+        page = "1"
+    page = (int(page) - 1) * 50
+
+    # Query database for submissions and get number of submissions for pagination
     if len(args) == 0:
-        submissions = db.execute(
-            "SELECT * FROM submissions WHERE user_id=?", session["user_id"])
+        submissions = db.execute(("SELECT * FROM submissions WHERE user_id=? LIMIT 50 "
+                                  "OFFSET ?"), session["user_id"], page)
+        sub_length = len(db.execute(
+            "SELECT * FROM submissions WHERE user_id=?", session["user_id"]))
     else:
         args.insert(0, session["user_id"])
-        submissions = db.execute(
-            "SELECT * FROM submissions WHERE user_id=?" + modifier, *args)
-
-    return render_template("submissions.html", data=submissions)
+        sub_length = len(db.execute(
+            "SELECT * FROM submissions WHERE user_id=?" + modifier, *args))
+        args.append(page)
+        submissions = db.execute("SELECT * FROM submissions WHERE user_id=?" + modifier +
+                                 " LIMIT 50 OFFSET ?", *args)
+    return render_template("submissions.html",
+                           data=submissions, sub_length=-(-sub_length // 50))
 
 
 # Error handling

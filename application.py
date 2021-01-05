@@ -414,17 +414,32 @@ def reset_password_user(token):
 @app.route('/problems')
 @admin_required
 def problems():
-    data = db.execute("SELECT * FROM problems WHERE draft=0 ORDER BY id ASC")
-    return render_template('problem/problems.html',
-                           data=data)
+    page = request.args.get("page")
+    if not page:
+        page = "1"
+    page = (int(page) - 1) * 50
+
+    length = len(db.execute("SELECT * FROM problems WHERE draft=0"))
+    data = db.execute(("SELECT * FROM problems WHERE draft=0 ORDER BY id ASC LIMIT 50 "
+                       "OFFSET ?"), page)
+
+    return render_template('problem/problems.html', data=data, length=-(-length // 50))
 
 
 @app.route('/problems/draft')
 @admin_required
 def draft_problems():
-    data = db.execute("SELECT * FROM problems WHERE draft=1 ORDER BY id ASC")
+    page = request.args.get("page")
+    if not page:
+        page = "1"
+    page = (int(page) - 1) * 50
+
+    length = len(db.execute("SELECT * FROM problems WHERE draft=1"))
+    data = db.execute(("SELECT * FROM problems WHERE draft=1 ORDER BY id ASC LIMIT 50 "
+                       "OFFSET ?"), page)
+
     return render_template('problem/draft_problems.html',
-                           data=data)
+                           data=data, length=-(-length // 50))
 
 
 @app.route('/problem/<problem_id>')
@@ -582,25 +597,32 @@ def admin_submissions():
         submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
                                   "LEFT JOIN users ON user_id=users.id LIMIT 50 "
                                   "OFFSET ?"), page)
-        sub_length = len(db.execute("SELECT * FROM submissions"))
+        length = len(db.execute("SELECT * FROM submissions"))
     else:
         modifier = modifier[:-4]
-        sub_length = len(db.execute(("SELECT submissions.*, users.username FROM "
-                                     "submissions LEFT JOIN users ON user_id=users.id ")
-                                    + modifier, *args))
+        length = len(db.execute(("SELECT submissions.*, users.username FROM submissions "
+                                 "LEFT JOIN users ON user_id=users.id ") + modifier,
+                                *args))
         args.append(page)
         submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
                                  f"LEFT JOIN users ON user_id=users.id {modifier}"
                                   " LIMIT 50 OFFSET ?"), *args)
 
     return render_template("admin/submissions.html",
-                           data=submissions, sub_length=-(-sub_length // 50))
+                           data=submissions, length=-(-length // 50))
 
 
 @app.route("/admin/users")
 @admin_required
 def admin_users():
-    return render_template("admin/users.html", data=db.execute("SELECT * FROM users"))
+    page = request.args.get("page")
+    if not page:
+        page = "1"
+    page = (int(page) - 1) * 50
+
+    count = len(db.execute("SELECT * FROM users"))
+    data = db.execute("SELECT * FROM users LIMIT 50 OFFSET ?", page)
+    return render_template("admin/users.html", data=data, length=-(-count // 50))
 
 
 @app.route("/admin/createproblem", methods=["GET", "POST"])
@@ -876,17 +898,17 @@ def user_submissions():
     if len(args) == 0:
         submissions = db.execute(("SELECT * FROM submissions WHERE user_id=? LIMIT 50 "
                                   "OFFSET ?"), session["user_id"], page)
-        sub_length = len(db.execute(
+        length = len(db.execute(
             "SELECT * FROM submissions WHERE user_id=?", session["user_id"]))
     else:
         args.insert(0, session["user_id"])
-        sub_length = len(db.execute(
+        length = len(db.execute(
             "SELECT * FROM submissions WHERE user_id=?" + modifier, *args))
         args.append(page)
         submissions = db.execute("SELECT * FROM submissions WHERE user_id=?" + modifier +
                                  " LIMIT 50 OFFSET ?", *args)
-    return render_template("submissions.html",
-                           data=submissions, sub_length=-(-sub_length // 50))
+
+    return render_template("submissions.html", data=submissions, length=-(-length // 50))
 
 
 # Error handling

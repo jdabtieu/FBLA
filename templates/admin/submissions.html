@@ -75,7 +75,7 @@
 <script>
     var page = new URL(window.location.href).searchParams.get("page");
     $(() => $('#pagination').twbsPagination({
-        totalPages: {{ sub_length }},
+        totalPages: {{ length }},
         visiblePages: 7,
         startPage: page ? parseInt(page) : 1,
         initiateStartPageClick: false,

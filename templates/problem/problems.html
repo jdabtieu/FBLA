@@ -4,6 +4,7 @@
 
 {% block main %}
 <h1>Problems</h1>
+<div id="pagination"></div>
 <div style="overflow: auto;">
     <table class="table table-hover" style="min-width: 400px;">
         <thead class="thead-dark">
@@ -24,4 +25,40 @@
         </tbody>
     </table>
 </div>
+<script src="/assets/js/jquery.twbsPagination.min.js"></script>
+<script>
+    var page = new URL(window.location.href).searchParams.get("page");
+    $(() => $('#pagination').twbsPagination({
+        totalPages: {{ length }},
+        visiblePages: 7,
+        startPage: page ? parseInt(page) : 1,
+        initiateStartPageClick: false,
+        onPageClick: function (event, page) {
+            insertParam(page);
+        }
+    }));
+
+    function insertParam(value) {
+        key = "page";
+
+        // kvp looks like ['key1=value1', 'key2=value2', ...]
+        var kvp = document.location.search.substr(1).split('&');
+        let i = 0;
+
+        for(; i < kvp.length; i++){
+            if (kvp[i].startsWith('page=')) {
+                let pair = kvp[i].split('=');
+                pair[1] = value;
+                kvp[i] = pair.join('=');
+                break;
+            }
+        }
+
+        if(i >= kvp.length){
+            kvp[kvp.length] = ["page", value].join('=');
+        }
+
+        document.location.search = kvp.join('&');
+    }
+</script>
 {% endblock %}

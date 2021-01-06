@@ -768,6 +768,10 @@ def makeadmin():
         flash("Only the super-admin can revoke admin status", "danger")
         return redirect("/admin/users")
 
+    if admin_status and user_id == 1:
+        flash("Cannot revoke super-admin privileges", "danger")
+        return redirect("/admin/users")
+
     if admin_status and session["user_id"] == 1:
         db.execute("UPDATE users SET admin=0 WHERE id=:id", id=user_id)
         flash("Admin privileges for " + user[0]["username"] + " revoked", "success")

@@ -128,7 +128,7 @@ def login():
         text = render_template('email/confirm_login_text.txt',
                                username=username, token=token)
 
-        send_email('Confirm Your NAME Login',
+        send_email('Confirm Your FBLAquiz Login',
                    app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
         flash(('A login confirmation email has been sent to the email address you '
@@ -205,7 +205,7 @@ def register():
     text = render_template('email/confirm_account_text.txt',
                            username=username, token=token)
 
-    send_email('Confirm Your NAME Account',
+    send_email('Confirm Your FBLAquiz Account',
                app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
     db.execute(("INSERT INTO users(username, password, email, join_date) "
@@ -365,7 +365,7 @@ def forgotpassword():
         text = render_template('email/reset_password_text.txt',
                                username=rows[0]["username"], token=token)
 
-        send_email('Reset Your NAME Password',
+        send_email('Reset Your FBLAquiz Password',
                    app.config['MAIL_DEFAULT_SENDER'], [email], text, mail)
 
     flash(("If there is an account associated with that email, a password reset email "
@@ -796,8 +796,17 @@ def maintenance():
     return redirect('/admin/console')
 
 
-@app.route("/quiz")
+@app.route("/quiz", methods=["GET", "POST"])
 def quiz():
+    if request.method == "GET":
+        return render_template("quizselect.html")
+
+    # Reached via POST
+
+    difficulty = request.form.getlist("difficulty")
+    ptypes = request.form.getlist("ptype")
+
+
     questions = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted=0 "
                             "ORDER BY RANDOM() LIMIT 5"))
 

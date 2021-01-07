@@ -59,6 +59,6 @@
         </div>
     {% endfor %}
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    <button class="btn btn-primary" id="submit">Submit</button>
+    <input class="btn btn-primary" type="submit" id="submit" name="submit" value="Submit">
 </form>
 {% endblock %}

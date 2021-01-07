@@ -6,4 +6,4 @@ To confirm your registration, click on the following link:
 
 If you have not registered for our website, please ignore this message.
 
-{{ CLUB_NAME }}
+FBLAquiz

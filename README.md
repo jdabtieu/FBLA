@@ -1,5 +1,5 @@
-# NAME (temp name)
-NAME is a web application serving quizzes about everything FBLA!
+# FBLAquiz
+FBLAquiz is a web application serving quizzes about everything FBLA!
 
 ## Installation
 See [INSTALL.md](INSTALL.md).

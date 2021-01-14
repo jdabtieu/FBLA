@@ -47,15 +47,13 @@ csrf.init_app(app)
 def check_for_maintenance():
     global maintenance_mode
     if maintenance_mode and request.path != '/login':
-        if not session:
-            return render_template("error/maintenance.html"), 503
-        elif not session['admin']:
+        if not session or "admin" not in session or not session['admin']:
             return render_template("error/maintenance.html"), 503
 
 
 @app.route("/")
 def index():
-    if not session or not session["user_id"]:
+    if not session or "user_id" not in session:
         return render_template("index.html")
 
     return render_template("logged-in.html")

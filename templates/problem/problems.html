@@ -9,15 +9,15 @@
     <table class="table table-hover" style="min-width: 400px;">
         <thead class="thead-dark">
             <tr>
-                <th scope="col" style="width: 33%;">ID</th>
-                <th scope="col" style="width: 33%;">Category</th>
-                <th scope="col" style="width: 34%;">Difficulty</th>
+                <th scope="col" style="width: 60%;">ID</th>
+                <th scope="col" style="width: 20%;">Category</th>
+                <th scope="col" style="width: 20%;">Difficulty</th>
             </tr>
         </thead>
         <tbody>
             {% for row in data %}
             <tr>
-                <td><a href="/problem/{{ row["id"] }}">{{ row["id"] }}</a></td>
+                <td><a href="/problem/{{ row["id"] }}" class="text-ellipses a-ellipses">{{ row["description"] }}</a></td>
                 <td>{{ row["category"] }}</td>
                 <td>{{ row["difficulty"] }}</td>
             </tr>

@@ -59,6 +59,21 @@ td {
     }
 }
 
+.text-ellipses {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.a-ellipses {
+    display: inline-block;
+    width: -webkit-fill-available;
+}
+
+.pagination {
+    overflow-x: scroll;
+}
+
 /****************** ADMIN INTERFACE **************************/
 .create-blank {
     display: inline;

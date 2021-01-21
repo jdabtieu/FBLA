@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}Toggle 2FA{% endblock %}
+
+{% block main %}
+<h1>Toggle 2FA</h1>
+<p>Two-factor authentication is currently {{ "enabled" if enabled else "disabled" }}</p>
+<form method="post">
+    <button class="btn btn-primary" type="submit">{{ "Disable" if enabled else "Enable" }} 2FA</button>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+</form>
+{% endblock %}

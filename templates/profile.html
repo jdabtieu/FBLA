@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block main %}
+<h2>View Profile</h2>
+<hr style="margin: 0 5px;">
+<div class="flex">
+	<div style="flex: 2">
+		<h2>{{ session.username }}</h2>
+		<br><br>
+		<h4>Actions</h4>
+		<a href="/settings/changepassword" role="button">Change Password</a>
+		<br>
+		<a href="/settings/toggle2fa" role="button">Toggle 2FA</a>
+	</div>
+	<div style="flex: 3">
+		<h4>Statistics</h4>
+		<p>Joined: <span class="dt">{{ user_data["join_date"] }}</span><br>
+		Most recent quiz: <a href="/quiz/results?id={{ recent_quiz['id'] }}"><span class="dt">{{ recent_quiz["date"] }}</span></a><br>
+		Number of perfect scores: {{ perfects }}<br>
+		Number of quizzes taken: {{ total_quizzes }}</p>
+	</div>
+</div>
+{% endblock %}

@@ -56,7 +56,12 @@ def index():
     if not session or "user_id" not in session:
         return render_template("index.html")
 
-    return render_template("logged-in.html")
+    most_difficult = db.execute(
+        ('SELECT category, COUNT(*) FROM submissions_data LEFT JOIN problems ON '
+         'submissions_data.problem_id=problems.id WHERE sub_id IN '
+         '(SELECT id FROM submissions WHERE user_id=1) AND submissions_data.correct=0 '
+         'GROUP BY category ORDER BY COUNT(*) DESC'))[0]["category"]
+    return render_template("logged-in.html", most_difficult=most_difficult)
 
 
 @app.route("/assets/<path:filename>")
@@ -121,6 +126,7 @@ def login():
                 'email': email,
                 'expiration': exp.isoformat()
             },
+            app.config['SECRET_KEY'],
             algorithm='HS256'
         ).decode('utf-8')
         text = render_template('email/confirm_login_text.txt',
@@ -273,10 +279,18 @@ def confirm_login(token):
     return redirect("/")
 
 
+@app.route("/profile")
 @login_required
-@app.route("/settings")
 def settings():
-    return render_template("settings.html")
+    user_data = db.execute("SELECT * FROM users WHERE id=?", session["user_id"])
+    recent_quiz = db.execute(
+        "SELECT * FROM submissions WHERE user_id=? ORDER BY date DESC LIMIT 1",
+        session["user_id"])[0]
+    perfects = len(db.execute(
+        "SELECT * FROM submissions WHERE user_id=? AND score=5", session["user_id"]))
+    total_quizzes = len(db.execute(
+        "SELECT * FROM submissions WHERE user_id=?", session["user_id"]))
+    return render_template("profile.html", user_data=user_data[0], recent_quiz=recent_quiz, perfects=perfects, total_quizzes=total_quizzes)
 
 
 @app.route("/settings/changepassword", methods=["GET", "POST"])
@@ -314,22 +328,26 @@ def changepassword():
                id=session["user_id"])
 
     flash("Password change successful", "success")
-    return redirect("/settings")
+    return redirect("/profile")
 
 
 @login_required
-@app.route("/settings/toggle2fa")
+@app.route("/settings/toggle2fa", methods=["GET", "POST"])
 def toggle2fa():
-    rows = db.execute("SELECT * FROM users WHERE id = :id",
-                      id=session["user_id"])
+    rows = db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])[0]
 
-    if rows[0]["twofa"]:
+    if request.method == "GET":
+        return render_template("auth/2fa_confirm.html", enabled=rows["twofa"])
+
+    # Reached via POST
+
+    if rows["twofa"]:
         db.execute("UPDATE users SET twofa=0 WHERE id=:id", id=session["user_id"])
         flash("2FA successfully disabled", "success")
     else:
         db.execute("UPDATE users SET twofa=1 WHERE id=:id", id=session["user_id"])
         flash("2FA successfully enabled", "success")
-    return redirect("/settings")
+    return redirect("/profile")
 
 
 @app.route("/forgotpassword", methods=["GET", "POST"])
@@ -830,7 +848,15 @@ def quiz_results():
     sub_data = db.execute(("SELECT * FROM submissions_data JOIN problems ON "
                            "problem_id=problems.id WHERE sub_id=:id"), id=sub_id)
 
-    return render_template("quizresults.html", sub=sub[0], sub_data=sub_data)
+    score = sub[0]["score"]
+    msg = ["You can do better than this!",
+           "Try again for a better score!",
+           "Try again to get perfect!",
+           "Not bad, try again for a perfect score!",
+           "So close! Try again for a chance of perfect!",
+           "Wonderful job! Congratulations on a perfect score!"][score]
+
+    return render_template("quizresults.html", sub=sub[0], sub_data=sub_data, msg=msg)
 
 
 @app.route("/quiz/submit", methods=["POST"])

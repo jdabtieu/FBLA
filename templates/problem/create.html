@@ -60,14 +60,15 @@
             $(".inputs .blank").addClass("create-blank");
         } else if (selected === "Blank") {
             $(".inputs input[type='radio']").css("display", "none").removeAttr("required");
+            $(".inputs input[type='checkbox']").css("display", "none").removeAttr("required");
             $(".inputs").css("display", "");
             $(".inputs .blank").removeClass("create-blank");
             $("#b .blank").removeAttr("required");
             $("#c .blank").removeAttr("required");
             $("#d .blank").removeAttr("required");
         } else {
-            $(".inputs input[type='radio']").removeAttr("required");
-            $(".inputs .blank").removeAttr("required");
+            $(".inputs input[type='radio']").removeAttr("required").css("display", "");
+            $(".inputs .blank").removeAttr("required").addClass("create-blank");
             $(".inputs input[type='radio']").attr("type", "checkbox");
         }
     });

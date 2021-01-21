@@ -15,6 +15,7 @@
 <i>Quiz taken at <span class="dt">{{ sub["date"] }}</span></i>
 <h5>Score: {{ sub["score"] }}/5</h5>
 <h5>Taken By: {{ sub["username"] if sub["username"] else "Anonymous" }}</h5>
+<p>{{ msg }}</p>
 {% for question in sub_data %}
     <div class="form-group">
         <div>

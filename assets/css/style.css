@@ -74,6 +74,10 @@ td {
     overflow-x: auto;
 }
 
+.bg-primary {
+    background-color: #006be8!important;
+}
+
 /****************** ADMIN INTERFACE **************************/
 .create-blank {
     display: inline;

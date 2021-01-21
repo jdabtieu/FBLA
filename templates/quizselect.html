@@ -4,32 +4,8 @@
 
 {% block title %}Start Quiz{% endblock %}
 {% block main %}
-<h1>FBLA Quiz</h1>
+<h3 class="text-center" style="margin-top: 5%;">Ready to start the quiz?</h3>
 <form method="post" autocomplete="off">
-    <div class="form-group">
-        <h3>Difficulty</h3>
-        <input type="checkbox" name="difficulty" value="1" id="difficulty1" checked>
-        <label for="difficulty1">Baby</label><br>
-        <input type="checkbox" name="difficulty" value="2" id="difficulty2" checked>
-        <label for="difficulty2">Easy</label><br>
-        <input type="checkbox" name="difficulty" value="3" id="difficulty3" checked>
-        <label for="difficulty3">Medium</label><br>
-        <input type="checkbox" name="difficulty" value="4" id="difficulty4" checked>
-        <label for="difficulty4">Hard</label><br>
-        <input type="checkbox" name="difficulty" value="5" id="difficulty5" checked>
-        <label for="difficulty5">Impossible</label><br>
-    </div>
-    <div class="form-group">
-        <h3>Problem Types</h3>
-        <input type="checkbox" name="ptype" value="1" id="ptype1" checked>
-        <label for="ptype1">History</label><br>
-        <input type="checkbox" name="ptype" value="2" id="ptype2" checked>
-        <label for="ptype2">Events</label><br>
-        <input type="checkbox" name="ptype" value="3" id="ptype3" checked>
-        <label for="ptype3">Organization</label><br>
-        <input type="checkbox" name="ptype" value="4" id="ptype4" checked>
-        <label for="ptype4">Misc</label><br>
-    </div>
-    <input class="btn btn-primary" type="submit" id="submit" name="submit" value="Start Quiz">
+    <input class="btn btn-primary btn-lg" type="submit" id="submit" name="submit" value="Start Quiz" style="margin-top: 1rem; margin-left: 50%; transform: translate(-50%);">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 {% endblock %}

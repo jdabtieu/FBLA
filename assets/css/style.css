@@ -57,6 +57,15 @@ td {
     .print-button {
         display: none!important;
     }
+
+    footer {
+        display: none!important;
+    }
+
+    .container-md {
+        padding-top: 1rem!important;
+        padding-bottom: 0;
+    }
 }
 
 .text-ellipses {

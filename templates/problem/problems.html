@@ -4,6 +4,14 @@
 
 {% block main %}
 <h1>Problems</h1>
+{% for item in non_length %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    Warning: less than 5 problems of {{ item }} type. Users may get less than 5 questions on quiz.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
 <div id="pagination"></div>
 <div style="overflow: auto;">
     <table class="table table-hover" style="min-width: 400px;">

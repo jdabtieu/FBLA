@@ -1,7 +1,6 @@
 import sys
 import logging
 from datetime import datetime, timedelta
-from tempfile import mkdtemp
 
 import jwt
 from cs50 import SQL
@@ -305,7 +304,9 @@ def settings():
         "SELECT * FROM submissions WHERE user_id=? AND score=5", session["user_id"]))
     total_quizzes = len(db.execute(
         "SELECT * FROM submissions WHERE user_id=?", session["user_id"]))
-    return render_template("profile.html", user_data=user_data[0], recent_quiz=recent_quiz, perfects=perfects, total_quizzes=total_quizzes)
+    return render_template("profile.html", user_data=user_data[0],
+                           recent_quiz=recent_quiz, perfects=perfects,
+                           total_quizzes=total_quizzes)
 
 
 @app.route("/settings/changepassword", methods=["GET", "POST"])
@@ -830,13 +831,20 @@ def maintenance():
 @app.route("/quiz", methods=["GET", "POST"])
 def quiz():
     if request.method == "GET":
+        ptype = request.args.get('type')
+        if ptype:
+            return render_template('quizselect.html', ptype=ptype)
         return render_template("quizselect.html")
 
     # Reached via POST
 
-    difficulty = request.form.getlist("difficulty")
-    ptypes = request.form.getlist("ptype")
+    ptype = request.form.get("ptype")
 
+    if ptype:
+        questions = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted = 0 "
+                                "AND category=? ORDER BY RANDOM() LIMIT 5"), ptype)
+        if len(questions) > 0:
+            return render_template("quiz.html", questions=questions)
 
     questions = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted=0 "
                             "ORDER BY RANDOM() LIMIT 5"))

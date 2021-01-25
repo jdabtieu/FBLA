@@ -57,11 +57,26 @@ def index():
         return render_template("index.html")
 
     most_difficult = db.execute(
-        ('SELECT category, COUNT(*) FROM submissions_data LEFT JOIN problems ON '
-         'submissions_data.problem_id=problems.id WHERE sub_id IN '
-         '(SELECT id FROM submissions WHERE user_id=1) AND submissions_data.correct=0 '
-         'GROUP BY category ORDER BY COUNT(*) DESC'))[0]["category"]
-    return render_template("logged-in.html", most_difficult=most_difficult)
+        ('SELECT category, submissions_data.correct, COUNT(*) FROM submissions_data '
+         'LEFT JOIN problems ON submissions_data.problem_id=problems.id WHERE sub_id IN '
+         '(SELECT id FROM submissions WHERE user_id=1) GROUP BY '
+         'category, submissions_data.correct '
+         'ORDER BY category DESC, submissions_data.correct DESC'))
+
+    lowest_score = 1
+    lowest_category = ""
+    for i in range(0, len(most_difficult) // 2):
+        corr = most_difficult[i * 2]
+        incc = most_difficult[i * 2 + 1]
+        try:
+            score = corr['COUNT(*)'] / (incc['COUNT(*)'] + corr['COUNT(*)'])
+        except ZeroDivisionError:
+            score = 0
+        if score < lowest_score:
+            lowest_score = score
+            lowest_category = corr['category']
+
+    return render_template("logged-in.html", most_difficult=lowest_category)
 
 
 @app.route("/assets/<path:filename>")

@@ -33,5 +33,7 @@ db.execute("INSERT INTO 'users' VALUES(1, 'admin', ?, ?, datetime('now'), 1, 0, 
 
 # Configure application
 os.mkdir("logs")
+os.mkdir("session")
+os.chmod("session", 0o700)
 import daily_tasks  # noqa
 shutil.copy2("default_settings.py", "settings.py")

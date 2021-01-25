@@ -18,7 +18,7 @@ from helpers import *
 app = Flask(__name__)
 maintenance_mode = False
 app.config.from_object('settings')
-app.config['SESSION_FILE_DIR'] = mkdtemp()
+app.config['SESSION_FILE_DIR'] = 'session/'
 
 # Configure logging
 logging.basicConfig(

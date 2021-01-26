@@ -118,3 +118,20 @@ td {
 .svg-green {
     filter: invert(57%) sepia(58%) saturate(3606%) hue-rotate(83deg) brightness(118%) contrast(125%);
 }
+
+
+#banner {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    max-height: 500px;
+}
+
+#banner-heading {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
+}

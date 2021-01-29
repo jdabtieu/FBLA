@@ -127,6 +127,7 @@ In this file, paste in the following, making sure to replace `/path/to/install` 
 server {
     listen 80;
     server_name DOMAIN www.DOMAIN;
+    access_log /path/to/install/FBLA/logs/application.log;
 
     location / {
         include proxy_params;

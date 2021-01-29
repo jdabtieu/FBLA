@@ -6,6 +6,14 @@
     max-height: 500px;
 }
 
+#banner-mask {
+    background-color: rgba(255, 255, 255, 0.3);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+
 #banner-heading {
     position: absolute;
     top: 50%;
@@ -17,6 +25,16 @@
 
 #banner-heading h1 {
     font-size: 5rem;
+}
+
+@media screen and (max-width: 799px) {
+    #banner-heading h1 {
+        font-size: 3rem;
+    }
+    
+    #banner-heading h3 {
+        font-size: 1rem;
+    }
 }
 
 /****************** SUBMISSIONS PAGE LAYOUT ******************/

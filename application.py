@@ -446,7 +446,8 @@ def reset_password_user(token):
 @app.route('/problems')
 @admin_required
 def problems():
-    data = db.execute("SELECT category, COUNT(*) FROM problems GROUP BY category")
+    data = db.execute(
+        "SELECT category, COUNT(*) FROM problems WHERE deleted=0 GROUP BY category")
     non_length = []
     for item in data:
         if item['COUNT(*)'] < 5:
@@ -457,9 +458,9 @@ def problems():
         page = "1"
     page = (int(page) - 1) * 50
 
-    length = len(db.execute("SELECT * FROM problems WHERE draft=0"))
-    data = db.execute(("SELECT * FROM problems WHERE draft=0 ORDER BY id ASC LIMIT 50 "
-                       "OFFSET ?"), page)
+    length = len(db.execute("SELECT * FROM problems WHERE draft=0 AND deleted=0"))
+    data = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted=0 "
+                       "ORDER BY id ASC LIMIT 50 OFFSET ?"), page)
 
     return render_template('problem/problems.html', data=data, length=-(-length // 50),
                            non_length=non_length)
@@ -848,7 +849,7 @@ def quiz():
     ptype = request.form.get("ptype")
 
     if ptype:
-        questions = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted = 0 "
+        questions = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted=0 "
                                 "AND category=? ORDER BY RANDOM() LIMIT 5"), ptype)
         if len(questions) > 0:
             return render_template("quiz.html", questions=questions)

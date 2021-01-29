@@ -27,7 +27,7 @@
     font-size: 5rem;
 }
 
-@media screen and (max-width: 799px) {
+@media screen and (max-width: 799.99px) {
     #banner-heading h1 {
         font-size: 3rem;
     }

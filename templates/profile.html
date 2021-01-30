@@ -17,7 +17,9 @@
 	<div style="flex: 3">
 		<h4>Statistics</h4>
 		<p>Joined: <span class="dt">{{ user_data["join_date"] }}</span><br>
-		Most recent quiz: <a href="/quiz/results?id={{ recent_quiz['id'] }}"><span class="dt">{{ recent_quiz["date"] }}</span></a><br>
+		{% if recent_quiz %}
+			Most recent quiz: <a href="/quiz/results?id={{ recent_quiz['id'] }}"><span class="dt">{{ recent_quiz["date"] }}</span></a><br>
+		{% endif %}
 		Number of perfect scores: {{ perfects }}<br>
 		Number of quizzes taken: {{ total_quizzes }}</p>
 	</div>

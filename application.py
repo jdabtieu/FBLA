@@ -300,13 +300,14 @@ def settings():
     total_quizzes = len(db.execute(
         "SELECT * FROM submissions WHERE user_id=?", session["user_id"]))
     if total_quizzes == 0:
-        return render_template("profile.html", user_data=user_data[0],
-                               total_quizzes=total_quizzes)
-    recent_quiz = db.execute(
-        "SELECT * FROM submissions WHERE user_id=? ORDER BY date DESC LIMIT 1",
-        session["user_id"])[0]
-    perfects = len(db.execute(
-        "SELECT * FROM submissions WHERE user_id=? AND score=5", session["user_id"]))
+        recent_quiz = None
+        perfects = 0
+    else:
+        recent_quiz = db.execute(
+            "SELECT * FROM submissions WHERE user_id=? ORDER BY date DESC LIMIT 1",
+            session["user_id"])[0]
+        perfects = len(db.execute(
+            "SELECT * FROM submissions WHERE user_id=? AND score=5", session["user_id"]))
 
     return render_template("profile.html", user_data=user_data[0],
                            recent_quiz=recent_quiz, perfects=perfects,

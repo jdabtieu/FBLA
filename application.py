@@ -62,7 +62,7 @@ def index():
          'category, submissions_data.correct '
          'ORDER BY category DESC, submissions_data.correct DESC'))
 
-    lowest_score = 1
+    lowest_score = 0
     lowest_category = ""
     for i in range(0, len(most_difficult) // 2):
         corr = most_difficult[i * 2]
@@ -297,13 +297,17 @@ def confirm_login(token):
 @login_required
 def settings():
     user_data = db.execute("SELECT * FROM users WHERE id=?", session["user_id"])
+    total_quizzes = len(db.execute(
+        "SELECT * FROM submissions WHERE user_id=?", session["user_id"]))
+    if total_quizzes == 0:
+        return render_template("profile.html", user_data=user_data[0],
+                               total_quizzes=total_quizzes)
     recent_quiz = db.execute(
         "SELECT * FROM submissions WHERE user_id=? ORDER BY date DESC LIMIT 1",
         session["user_id"])[0]
     perfects = len(db.execute(
         "SELECT * FROM submissions WHERE user_id=? AND score=5", session["user_id"]))
-    total_quizzes = len(db.execute(
-        "SELECT * FROM submissions WHERE user_id=?", session["user_id"]))
+
     return render_template("profile.html", user_data=user_data[0],
                            recent_quiz=recent_quiz, perfects=perfects,
                            total_quizzes=total_quizzes)

@@ -9,13 +9,50 @@
     <div id="banner-heading">
         <h1 class="text-center">FBLAquiz</h1>
         <h3 class="text-center">The world's #1 FBLA quiz platform</h3>
+        <p class="text-center" style="margin-top: 12px;">
+            <a href="/register" class="btn btn-primary" role="button" style="position: relative; top: -2px;">Register an account</a> 
+            or <a href="/login" style="color: #000;">login</a>
+        </p>
     </div>
 </div>
 {% endblock %}
 
 {% block main %}
-<p>Welcome to FBLAquiz, the leading FBLA quiz platform! To test your knowledge, simply click 'Take Quiz'
-above! If you would like to save your results for the future, get detailed statistics, and a
-personalized training plan, you should <a href="/register">create an account for free.</a><br><br>
-Happy quiz-taking!</p>
+<div class="flex">
+    <div style="flex: 1;">
+        <img src="/assets/images/bolt.svg" onerror="this.src='/assets/images/bolt.png'" class="home-img bg-primary">
+    </div>
+    <div style="flex: 3; position: relative;">
+        <div style="position: absolute; top: 50%; transform: translateY(-50%);">
+            <h4>Fast and Lightweight</h4>
+            <p>Get quiz results quickly, instantly after you submit. Fast and data-efficient, even on 3G connections.</p>
+        </div>
+    </div>
+</div>
+<div class="flex">
+    <div style="flex: 3; position: relative;">
+        <div style="position: absolute; top: 50%; transform: translateY(-50%);">
+            <h4>Personalized</h4>
+            <p>Get personalized tips to help you perform better. By <a href="/register">creating an account</a>, you can save quiz results, get access to detailed statistics, and get personalized training.</p>
+        </div>
+    </div>
+    <div style="flex: 1;">
+        <img src="/assets/images/user.svg" onerror="this.src='/assets/images/user.png'" class="home-img bg-primary">
+    </div>
+</div>
+<div class="flex">
+    <div style="flex: 1;">
+        <img src="/assets/images/restrict.svg" onerror="this.src='/assets/images/restrict.png'" class="home-img bg-primary">
+    </div>
+    <div style="flex: 3; position: relative;">
+        <div style="position: absolute; top: 50%; transform: translateY(-50%);">
+            <h4>Private and Secure</h4>
+            <p>We take data security very seriously. All data you send to us, including passwords and other form data are encrypted with industry-grade encryption. We also do not sell your data, and more information about how we handle user data is available in our <a href="/privacy">Privacy Policy</a></p>
+        </div>
+    </div>
+</div>
+<p class="text-center" style="margin-top: 12px;">
+    <a href="/register" class="btn btn-primary" role="button" style="position: relative; top: -2px;">Register an account</a> 
+    or <a href="/login" style="color: #000;">login</a>
+</p>
 {% endblock %}

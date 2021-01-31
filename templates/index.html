@@ -18,41 +18,44 @@
 {% endblock %}
 
 {% block main %}
-<div class="flex">
+<div class="flex-desktop">
     <div style="flex: 1;">
         <img src="/assets/images/bolt.svg" onerror="this.src='/assets/images/bolt.png'" class="home-img bg-primary">
     </div>
     <div style="flex: 3; position: relative;">
-        <div style="position: absolute; top: 50%; transform: translateY(-50%);">
-            <h4>Fast and Lightweight</h4>
+        <div class="home-text">
+            <h4 class="text-center">Fast and Lightweight</h4>
             <p>Get quiz results quickly, instantly after you submit. Fast and data-efficient, even on 3G connections.</p>
         </div>
     </div>
 </div>
-<div class="flex">
+<div class="flex-desktop">
+    <div class="mobile">
+        <img src="/assets/images/user.svg" onerror="this.src='/assets/images/user.png'" class="home-img bg-primary">
+    </div>
     <div style="flex: 3; position: relative;">
-        <div style="position: absolute; top: 50%; transform: translateY(-50%);">
-            <h4>Personalized</h4>
+        <div class="home-text">
+            <h4 class="text-center">Personalized</h4>
             <p>Get personalized tips to help you perform better. By <a href="/register">creating an account</a>, you can save quiz results, get access to detailed statistics, and get personalized training.</p>
         </div>
     </div>
-    <div style="flex: 1;">
+    <div style="flex: 1;" class="desktop">
         <img src="/assets/images/user.svg" onerror="this.src='/assets/images/user.png'" class="home-img bg-primary">
     </div>
 </div>
-<div class="flex">
+<div class="flex-desktop">
     <div style="flex: 1;">
         <img src="/assets/images/restrict.svg" onerror="this.src='/assets/images/restrict.png'" class="home-img bg-primary">
     </div>
     <div style="flex: 3; position: relative;">
-        <div style="position: absolute; top: 50%; transform: translateY(-50%);">
-            <h4>Private and Secure</h4>
+        <div class="home-text">
+            <h4 class="text-center">Private and Secure</h4>
             <p>We take data security very seriously. All data you send to us, including passwords and other form data are encrypted with industry-grade encryption. We also do not sell your data, and more information about how we handle user data is available in our <a href="/privacy">Privacy Policy</a></p>
         </div>
     </div>
 </div>
-<p class="text-center" style="margin-top: 12px;">
+<div class="text-center" style="margin-top: 25px;">
     <a href="/register" class="btn btn-primary" role="button" style="position: relative; top: -2px;">Register an account</a> 
     or <a href="/login" style="color: #000;">login</a>
-</p>
+</div>
 {% endblock %}

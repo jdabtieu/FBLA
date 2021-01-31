@@ -27,7 +27,7 @@
     font-size: 5rem;
 }
 
-@media screen and (max-width: 799.99px) {
+@media screen and (max-width: 800px) {
     #banner-heading h1 {
         font-size: 3rem;
     }
@@ -45,14 +45,29 @@
     margin: 8px 12px;
 }
 
+@media screen and (min-width: 500px) {
+    .home-text {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+@media screen and (max-width: 499px) {
+    .home-img {
+        display: block;
+        margin: 8px auto;
+    }
+}
+
 /****************** SUBMISSIONS PAGE LAYOUT ******************/
-@media screen and (min-width: 990.01px) {
+@media screen and (min-width: 990px) {
     #submission-search-bottom {
         display: none;
     }
 }
 
-@media screen and (max-width: 990px) {
+@media screen and (max-width: 989px) {
     #submission-search-right {
         display: none;
     }
@@ -132,6 +147,22 @@ td {
 
 .bg-primary {
     background-color: #006be8!important;
+}
+
+@media screen and (max-width: 499px) {
+    .desktop {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .mobile {
+        display: none;
+    }
+
+    .flex-desktop {
+        display: flex;
+    }
 }
 
 /****************** ADMIN INTERFACE **************************/

@@ -5,6 +5,9 @@
 {% block title %}Start Quiz{% endblock %}
 {% block main %}
 <h3 class="text-center" style="margin-top: 5%;">Ready to start the quiz?</h3>
+{% if not session.username %}
+    <div class="text-center">Are you sure you do not want to <a href="/register">create an account</a>? Creating an account will let you save results and get a personalized training plan.</div>
+{% endif %}
 <form method="post" autocomplete="off">
 	{% if ptype %}
 		<input type="hidden" name="ptype" value="{{ ptype }}">

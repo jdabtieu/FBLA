@@ -2,7 +2,7 @@
 FBLAquiz is a web application serving quizzes about everything FBLA!
 
 ## Installation
-See [INSTALL.md](INSTALL.md).
+See [INSTALL.md](docs/INSTALL.md).
 
 ## Usage
 As an administrator, you will be able to view all submissions, add, edit, and delete questions

@@ -4,7 +4,6 @@ Prerequisites: Python 3
 It is recommended to create a venv (virtual environment) first, to ensure everything is working.
 
 # Initial setup
-### Linux (Bash)
 ```bash
 pip3 install -r requirements.txt
 python3 install.py
@@ -60,11 +59,11 @@ Navigate to the path you would like to install FBLAquiz at. In the guide, we wil
 mkdir -p /path/to/install
 cd /path/to/install
 git clone https://github.com/jdabtieu/FBLA.git
-cd FBLA
+cd FBLA/src
 python3 -m venv .
 source bin/activate
 ```
-At this point, your terminal should change to something like this to indicate that you are in a virtual environment now: `(FBLA) user@machine:/path/to/install/FBLA$`.
+At this point, your terminal should change to something like this to indicate that you are in a virtual environment now: `(FBLA) user@machine:/path/to/install/FBLA/src$`.
 ### Step 3 - Configuring the Application
 Run the following commands to install the dependencies.
 ```bash
@@ -105,9 +104,9 @@ After=network.target
 [Service]
 User=YOUR USERNAME HERE
 Group=www-data
-WorkingDirectory=/path/to/install/FBLA
-Environment="PATH=/path/to/install/FBLA/bin"
-ExecStart=/path/to/install/FBLA/bin/gunicorn --workers 3 --bind unix:FBLAquiz.sock -m 007 wsgi:app
+WorkingDirectory=/path/to/install/FBLA/src
+Environment="PATH=/path/to/install/FBLA/src/bin"
+ExecStart=/path/to/install/FBLA/src/bin/gunicorn --workers 3 --bind unix:FBLAquiz.sock -m 007 wsgi:app
 
 [Install]
 WantedBy=multi-user.target
@@ -127,11 +126,11 @@ In this file, paste in the following, making sure to replace `/path/to/install` 
 server {
     listen 80;
     server_name DOMAIN www.DOMAIN;
-    access_log /path/to/install/FBLA/logs/application.log;
+    access_log /path/to/install/FBLA/src/logs/application.log;
 
     location / {
         include proxy_params;
-        proxy_pass http://unix:/path/to/install/FBLA/FBLAquiz.sock;
+        proxy_pass http://unix:/path/to/install/FBLA/src/FBLAquiz.sock;
     }
 }
 ```
@@ -145,10 +144,10 @@ If no issues are present, we can restart Nginx, and our web app should work now!
 sudo systemctl restart nginx
 ```
 
-If everything worked, you should be able to go to http://www.YOUR_DOMAIN and see the web app. If you get any errors, check the error logs. A common place for Nginx to store error logs is at `/var/log/nginx/error.log`.
+If everything worked, you should be able to go to http://www.YOUR_DOMAIN and see the web app. If you get any errors, check the application logs and the error logs. A common place for Nginx to store error logs is at `/var/log/nginx/error.log`.
 
 A common error is 502 with permission denied in the error log, which you can fix by doing the following:
 
-1. Run `namei -nom /path/to/install/FBLA/FBLAquiz.sock`.
+1. Run `namei -nom /path/to/install/FBLA/src/FBLAquiz.sock`.
 2. Ensure that the www-data user can access every item on this path. This can be done by granting read and execute permissions to all users, or by setting the group to www-data and granting read and execute permissions to the group.
 3. Restart Gunicorn and Nginx by running `sudo systemctl restart FBLAquiz; sudo systemctl restart nginx`.

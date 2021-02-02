@@ -63,7 +63,7 @@ cd FBLA/src
 python3 -m venv .
 source bin/activate
 ```
-At this point, your terminal should change to something like this to indicate that you are in a virtual environment now: `(FBLA) user@machine:/path/to/install/FBLA/src$`.
+At this point, your terminal should change to something like this to indicate that you are in a virtual environment now: `(src) user@machine:/path/to/install/FBLA/src$`.
 ### Step 3 - Configuring the Application
 Run the following commands to install the dependencies.
 ```bash
@@ -115,6 +115,10 @@ And then we can start the service.
 ```bash
 sudo systemctl start FBLAquiz
 sudo systemctl enable FBLAquiz
+```
+We can check to make sure everything works by running
+```bash
+sudo systemctl status FBLAquiz
 ```
 ### Step 5 - Configuring Nginx
 Now it's time to allow Nginx to communicate with Gunicorn.

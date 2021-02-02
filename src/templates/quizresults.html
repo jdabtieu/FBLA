@@ -94,4 +94,9 @@
         {% endif %}
     </div>
 {% endfor %}
+<script>
+    if (navigator.share) {
+        $('.print-button').after('<button onclick="navigator.share({title: \'I scored {{ sub["score"] }}/5 on FBLAquiz. Can you match me?\',url: window.location.origin});" class="print-button mobile">Share <img src="/assets/images/share.svg" onerror="this.src=\'/assets/images/share.png\'" class="icon"></button>')
+    }
+</script>
 {% endblock %}

@@ -62,7 +62,7 @@ def index():
          'category, submissions_data.correct '
          'ORDER BY category DESC, submissions_data.correct DESC'))
 
-    lowest_score = 0
+    lowest_score = 2
     lowest_category = ""
     for i in range(0, len(most_difficult) // 2):
         corr = most_difficult[i * 2]
@@ -70,7 +70,7 @@ def index():
         try:
             score = corr['COUNT(*)'] / (incc['COUNT(*)'] + corr['COUNT(*)'])
         except ZeroDivisionError:
-            score = 0
+            score = 9
         if score < lowest_score:
             lowest_score = score
             lowest_category = corr['category']

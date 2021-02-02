@@ -60,6 +60,13 @@
     }
 }
 
+@media screen and (max-width: 458px) {
+    #banner img {
+        height: 200px;
+        width: auto;
+    }
+}
+
 /****************** SUBMISSIONS PAGE LAYOUT ******************/
 @media screen and (min-width: 990px) {
     #submission-search-bottom {
@@ -107,8 +114,6 @@ td {
 }
 
 .print-button {
-    position: absolute;
-    right: 0;
     padding: 0;
     border: 0;
     background-color: transparent;
@@ -162,6 +167,11 @@ td {
 
     .flex-desktop {
         display: flex;
+    }
+
+    .print-button {
+        position: absolute;
+        right: 0;
     }
 }
 

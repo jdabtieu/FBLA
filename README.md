@@ -1,6 +1,8 @@
 # FBLAquiz
 FBLAquiz is a web application serving quizzes about everything FBLA!
 
+Demo: https://fblaquiz.live
+
 ## Features
 ### Cross-Platform
 Although running FBLAquiz on a modern Linux distro is recommended, it runs on Windows, MacOS, and Linux. The only requirements are Python 3, a WSGI application, and a web server. More details can be found in [INSTALL.md](docs/INSTALL.md).

@@ -155,3 +155,5 @@ A common error is 502 with permission denied in the error log, which you can fix
 1. Run `namei -nom /path/to/install/FBLA/src/FBLAquiz.sock`.
 2. Ensure that the www-data user can access every item on this path. This can be done by granting read and execute permissions to all users, or by setting the group to www-data and granting read and execute permissions to the group.
 3. Restart Gunicorn and Nginx by running `sudo systemctl restart FBLAquiz; sudo systemctl restart nginx`.
+
+You can also set up SSL if you want, using certbox-nginx.

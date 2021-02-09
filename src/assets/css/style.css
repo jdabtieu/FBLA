@@ -175,6 +175,10 @@ td {
     }
 }
 
+label {
+    display: inline;
+}
+
 /****************** ADMIN INTERFACE **************************/
 .create-blank {
     display: inline;
@@ -196,7 +200,7 @@ td {
 }
 
 .green {
-    color: #00ff00!important;
+    color: #22d14e!important;
 }
 
 .svg-red {

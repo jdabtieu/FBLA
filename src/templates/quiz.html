@@ -10,23 +10,27 @@
             <h3>{{ question["description"] }}</h3>
             {% if question["type"] == "MC" %}
                 {% for letter in "abcd" %}
-                    <input
-                        type="radio"
-                        id="{{ question['id'] }}_{{ letter }}"
-                        name="{{ question['id'] }}"
-                        value="{{ question['id'] }}_{{ letter }}"
-                        required>
-                    <label for="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</label><br>
+                    <div class="mb-2">
+                        <input
+                            type="radio"
+                            id="{{ question['id'] }}_{{ letter }}"
+                            name="{{ question['id'] }}"
+                            value="{{ question['id'] }}_{{ letter }}"
+                            required>
+                        <label for="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</label>
+                    </div>
                 {% endfor %}
             {% elif question["type"] == "TF" %}
                 {% for letter in "ab" %}
-                    <input
-                        type="radio"
-                        id="{{ question['id'] }}_{{ letter }}"
-                        name="{{ question['id'] }}"
-                        value="{{ question['id'] }}_{{ letter }}"
-                        required>
-                    <label for="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</label><br>
+                    <div class="mb-2">
+                        <input
+                            type="radio"
+                            id="{{ question['id'] }}_{{ letter }}"
+                            name="{{ question['id'] }}"
+                            value="{{ question['id'] }}_{{ letter }}"
+                            required>
+                        <label for="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</label>
+                    </div>
                 {% endfor %}
             {% elif question["type"] == "Blank" %}
                     <input
@@ -35,12 +39,14 @@
                         required>
             {% elif question["type"] == "Select" %}
                 {% for letter in "abcd" %}
-                    <input
-                        type="checkbox"
-                        id="{{ question['id'] }}_{{ letter }}"
-                        name="{{ question['id'] }}"
-                        value="{{ question['id'] }}_{{ letter }}">
-                    <label for="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</label><br>
+                    <div class="mb-2">
+                        <input
+                            type="checkbox"
+                            id="{{ question['id'] }}_{{ letter }}"
+                            name="{{ question['id'] }}"
+                            value="{{ question['id'] }}_{{ letter }}">
+                        <label for="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</label>
+                    </div>
                 {% endfor %}
                 <input
                     type="checkbox"

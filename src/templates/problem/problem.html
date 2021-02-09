@@ -15,23 +15,27 @@
         <div id="choices">
             {% if data['type'] == 'MC' or data['type'] == 'Drop' %}
                 {% for letter in "abcd" %}
-                    <input
-                        type="radio"
-                        id="{{ data['id'] }}_{{ letter }}"
-                        {{ "checked" if data["correct"] == letter }} disabled>
-                    <label for="{{ data['id'] }}_{{ letter }}">
-                        {{ data[letter] }}
-                    </label><br>
+                    <div class="mb-2">
+                        <input
+                            type="radio"
+                            id="{{ data['id'] }}_{{ letter }}"
+                            {{ "checked" if data["correct"] == letter }} disabled>
+                        <label for="{{ data['id'] }}_{{ letter }}">
+                            {{ data[letter] }}
+                        </label>
+                    </div>
                 {% endfor %}
             {% elif data['type'] == 'TF' %}
                 {% for letter in "ab" %}
-                    <input
-                        type="radio"
-                        id="{{ data['id'] }}_{{ letter }}"
-                        {{ "checked" if data["correct"] == letter }} disabled>
-                    <label>
-                        {{ data[letter] }}
-                    </label><br>
+                    <div class="mb-2">
+                        <input
+                            type="radio"
+                            id="{{ data['id'] }}_{{ letter }}"
+                            {{ "checked" if data["correct"] == letter }} disabled>
+                        <label for="{{ data['id'] }}_{{ letter }}">
+                            {{ data[letter] }}
+                        </label>
+                    </div>
                 {% endfor %}
             {% elif data['type'] == 'Blank' %}
                 <p>Accepted answers:
@@ -43,13 +47,15 @@
                 </p>
             {% elif data['type'] == 'Select' %}
                 {% for letter in "abcd" %}
-                    <input
-                        type="checkbox"
-                        id="{{ data['id'] }}_{{ letter }}"
-                        {{ "checked" if letter in data["correct"] }} disabled>
-                    <label for="{{ data['id'] }}_{{ letter }}">
-                        {{ data[letter] }}
-                    </label><br>
+                    <div class="mb-2">
+                        <input
+                            type="checkbox"
+                            id="{{ data['id'] }}_{{ letter }}"
+                            {{ "checked" if letter in data["correct"] }} disabled>
+                        <label for="{{ data['id'] }}_{{ letter }}">
+                            {{ data[letter] }}
+                        </label>
+                    </div>
                 {% endfor %}
             {% endif %}
         </div>

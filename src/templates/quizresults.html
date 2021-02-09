@@ -39,31 +39,35 @@
         </div>
         {% if question['type'] == 'MC' or question['type'] == 'Drop' %}
             {% for letter in "abcd" %}
-                <input
-                    type="radio"
-                    id="{{ question['id'] }}_{{ letter }}"
-                    name="{{ question['id'] }}"
-                    value="{{ question['id'] }}_{{ letter }}"
-                    {{ "checked" if question["answer"] == letter }} disabled>
-                <label
-                    for="{{ question['id'] }}_{{ letter }}"
-                    class="{{ 'green' if question['correct'] == letter }} {{ 'red' if question['answer'] == letter and question['answer'] != question['correct'] }}">
-                        {{ question[letter] }}
-                </label><br>
+                <div class="mb-2">
+                    <input
+                        type="radio"
+                        id="{{ question['id'] }}_{{ letter }}"
+                        name="{{ question['id'] }}"
+                        value="{{ question['id'] }}_{{ letter }}"
+                        {{ "checked" if question["answer"] == letter }} disabled>
+                    <label
+                        for="{{ question['id'] }}_{{ letter }}"
+                        class="{{ 'green' if question['correct'] == letter }} {{ 'red' if question['answer'] == letter and question['answer'] != question['correct'] }}">
+                            {{ question[letter] }}
+                    </label>
+                </div>
             {% endfor %}
         {% elif question['type'] == 'TF' %}
             {% for letter in "ab" %}
-                <input
-                    type="radio"
-                    id="{{ question['id'] }}_{{ letter }}"
-                    name="{{ question['id'] }}"
-                    value="{{ question['id'] }}_{{ letter }}"
-                    {{ "checked" if question["answer"] == letter }} disabled>
-                <label
-                    for="{{ question['id'] }}_{{ letter }}"
-                    class="{{ 'green' if question['correct'] == letter }} {{ 'red' if question['answer'] == letter and question['answer'] != question['correct'] }}">
-                        {{ question[letter] }}
-                </label><br>
+                <div class="mb-2">
+                    <input
+                        type="radio"
+                        id="{{ question['id'] }}_{{ letter }}"
+                        name="{{ question['id'] }}"
+                        value="{{ question['id'] }}_{{ letter }}"
+                        {{ "checked" if question["answer"] == letter }} disabled>
+                    <label
+                        for="{{ question['id'] }}_{{ letter }}"
+                        class="{{ 'green' if question['correct'] == letter }} {{ 'red' if question['answer'] == letter and question['answer'] != question['correct'] }}">
+                            {{ question[letter] }}
+                    </label>
+                </div>
             {% endfor %}
         {% elif question['type'] == 'Blank' %}
             <input
@@ -79,17 +83,19 @@
             </p>
         {% elif question['type'] == 'Select' %}
             {% for letter in "abcd" %}
-                <input
-                    type="checkbox"
-                    id="{{ question['id'] }}_{{ letter }}"
-                    name="{{ question['id'] }}"
-                    value="{{ question['id'] }}_{{ letter }}"
-                    {{ "checked" if letter in question["answer"] }} disabled>
-                <label
-                    for="{{ question['id'] }}_{{ letter }}"
-                    class="{{ 'green' if letter in question['correct'] and letter in question['answer'] }} {{ 'red' if letter not in question['correct'] and letter in question['answer'] or letter in question['correct'] and letter not in question['answer'] }}">
-                        {{ question[letter] }}
-                </label><br>
+                <div class="mb-2">
+                    <input
+                        type="checkbox"
+                        id="{{ question['id'] }}_{{ letter }}"
+                        name="{{ question['id'] }}"
+                        value="{{ question['id'] }}_{{ letter }}"
+                        {{ "checked" if letter in question["answer"] }} disabled>
+                    <label
+                        for="{{ question['id'] }}_{{ letter }}"
+                        class="{{ 'green' if letter in question['correct'] and letter in question['answer'] }} {{ 'red' if letter not in question['correct'] and letter in question['answer'] or letter in question['correct'] and letter not in question['answer'] }}">
+                            {{ question[letter] }}
+                    </label>
+                </div>
             {% endfor %}
         {% endif %}
     </div>

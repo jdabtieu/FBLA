@@ -191,7 +191,7 @@ If you prefer not to use python3 and instead use dot-slash, make sure daily_task
 ```
 
 ## Step 7 (optional) - Setting up SSL
-You can also set up SSL if you want, using certbox.
+You can also set up SSL if you want, using certbot.
 
 A very good guide is available at https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04 detailing this process.
 

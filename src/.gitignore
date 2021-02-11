@@ -3,14 +3,14 @@
 /database.db.bak
 
 # Python Cache
-/__pycache__/
+/__pycache__
 
 # Private config
 /settings.py
 /secret_key.txt
 
 # Logs
-/logs/
+/logs
 
 # Sessions
 /session

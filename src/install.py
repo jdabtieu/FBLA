@@ -1,6 +1,7 @@
 from cs50 import SQL
 import os
 import shutil
+import secrets
 
 open("database.db", "w").close()
 

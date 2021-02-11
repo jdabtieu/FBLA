@@ -37,3 +37,8 @@ os.mkdir("session")
 os.chmod("session", 0o700)
 import daily_tasks  # noqa
 shutil.copy2("default_settings.py", "settings.py")
+
+# Generate new secret key
+secret = secrets.token_hex(48)  # 384 bits
+with open('secret_key.txt', 'w') as file:
+    file.write(secret)

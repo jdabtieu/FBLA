@@ -1,7 +1,11 @@
 # FBLAquiz
 FBLAquiz is a web application serving quizzes about everything FBLA!
 
-Demo: https://fblaquiz.live
+Demo: https://fblaquiz.live<br>
+The demo is reset every hour.<br>
+Admin account credentials: `admin:FBLAadmin`<br>
+User account credentials: `user:FBLAuser`<br>
+Alternatively, you may create your own account.
 
 ## Features
 ### Cross-Platform

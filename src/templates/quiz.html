@@ -56,7 +56,6 @@
                     checked>
             {% elif question["type"] == "Drop" %}
                 <select class="form-control form-group" name="{{ question['id'] }}">
-                    <option value="" selected hidden>Select...</option>
                     {% for letter in "abcd" %}
                         <option value="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</option>
                     {% endfor %}

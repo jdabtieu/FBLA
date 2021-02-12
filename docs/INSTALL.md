@@ -203,6 +203,7 @@ A very good guide is available at https://www.digitalocean.com/community/tutoria
 
 ### 502 Bad Gateway after restart
 1. Run `sudo chown USER /path/to/install/FBLA/src/logs/application.log` where USER is the user running FBLAquiz and /path/to/install is the installation path.
+2. Restart Gunicorn by running `sudo systemctl restart FBLAquiz`.
 
 ### SMTPAuthenticationError
 This is caused by invalid email credentials, or your email provider blocking access to less secure apps.

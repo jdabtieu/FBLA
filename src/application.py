@@ -52,16 +52,19 @@ def check_for_maintenance():
 
 @app.route("/")
 def index():
+    # User not logged in
     if not session or "user_id" not in session:
         return render_template("index.html")
 
+    # Get problem data for user
     most_difficult = db.execute(
         ('SELECT category, submissions_data.correct, COUNT(*) FROM submissions_data '
          'LEFT JOIN problems ON submissions_data.problem_id=problems.id WHERE sub_id IN '
-         '(SELECT id FROM submissions WHERE user_id=1) GROUP BY '
+         '(SELECT id FROM submissions WHERE user_id=?) GROUP BY '
          'category, submissions_data.correct '
-         'ORDER BY category DESC, submissions_data.correct DESC'))
+         'ORDER BY category DESC, submissions_data.correct DESC'), session["user_id"])
 
+    # Find most difficult problem type of user
     lowest_score = 2
     lowest_category = ""
     for i in range(0, len(most_difficult) // 2):
@@ -352,8 +355,8 @@ def changepassword():
     return redirect("/profile")
 
 
-@login_required
 @app.route("/settings/toggle2fa", methods=["GET", "POST"])
+@login_required
 def toggle2fa():
     rows = db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])[0]
 
@@ -453,6 +456,8 @@ def reset_password_user(token):
 def problems():
     data = db.execute(
         "SELECT category, COUNT(*) FROM problems WHERE deleted=0 GROUP BY category")
+
+    # Prepare warnings for categories with less than 5 problems
     non_length = []
     for item in data:
         if item['COUNT(*)'] < 5:

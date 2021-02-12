@@ -45,6 +45,9 @@ def generate_password():
 
 
 def send_email(subject, sender, recipients, text, mail):
+    """
+    Sends an email with {subject} from {sender} to {recipients} containing {text}
+    """
     message = Message(subject, sender=sender, recipients=recipients, body=text)
     mail.send(message)
 

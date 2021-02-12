@@ -862,6 +862,8 @@ def quiz():
     if ptype:
         questions = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted=0 "
                                 "AND category=? ORDER BY RANDOM() LIMIT 5"), ptype)
+
+        # Ensure the category exists and has at least 5 questions, else generate random
         if len(questions) >= 5:
             return render_template("quiz.html", questions=questions)
 
@@ -890,6 +892,7 @@ def quiz_results():
     sub_data = db.execute(("SELECT * FROM submissions_data JOIN problems ON "
                            "problem_id=problems.id WHERE sub_id=:id"), id=sub_id)
 
+    # Generate encouraging message
     score = sub[0]["score"]
     msg = ["You can do better than this!",
            "Try again for a better score!",
@@ -926,6 +929,7 @@ def quiz_submit():
             flash("Do not modify the quiz!", "danger")
             return redirect("/quiz")
 
+        # Check answers based on problem types
         if (data[0]["type"] == "MC" or
                 data[0]["type"] == "Drop" or
                 data[0]["type"] == "TF"):

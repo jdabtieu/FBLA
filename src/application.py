@@ -626,6 +626,7 @@ def admin_console():
 def admin_submissions():
     submissions = None
 
+    # Parse & prepare filters
     modifier = "WHERE"
     args = []
 
@@ -683,7 +684,7 @@ def createproblem():
 
     # Reached via POST
 
-    # get inputs & validate them
+    # Get inputs & validate them
     qtype = request.form.get("type")
 
     if not qtype or qtype not in ['MC', 'TF', 'Drop', 'Blank', 'Select']:
@@ -861,7 +862,7 @@ def quiz():
     if ptype:
         questions = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted=0 "
                                 "AND category=? ORDER BY RANDOM() LIMIT 5"), ptype)
-        if len(questions) > 0:
+        if len(questions) >= 5:
             return render_template("quiz.html", questions=questions)
 
     questions = db.execute(("SELECT * FROM problems WHERE draft=0 AND deleted=0 "

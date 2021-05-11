@@ -7,8 +7,8 @@
 <div id="pagination"></div>
 <div class="flex">
     <div style="flex: 3; overflow: auto;">
-        <table class="table table-hover" style="min-width: 400px;">
-            <thead class="thead-dark">
+        <table class="table table-hover table-full-width" style="min-width: 400px;">
+            <thead class="table-dark">
                 <tr>
                     <th scope="col" style="width: 15%;">ID</th>
                     <th scope="col" style="width: 25%;">Time</th>
@@ -34,8 +34,8 @@
         <div class="card">
             <h3>Filter Submissions</h3>
             <form>
-                <input class="form-control form-group" type="text" id="username" name="username" placeholder="Filter by username">
-                <select class="form-control form-group" id="score" name="score">
+                <input class="form-control mb-3" type="text" id="username" name="username" placeholder="Filter by username">
+                <select class="form-control form-select mb-3" id="score" name="score">
                     <option value="" selected hidden>Filter by score</option>
                     <option value="0">0</option>
                     <option value="1">1</option>
@@ -53,8 +53,8 @@
     <div class="card">
         <h3>Filter Submissions</h3>
         <form>
-            <input class="form-control form-group" type="text" id="username" name="username" placeholder="Filter by username">
-            <select class="form-control form-group" id="correct" name="correct">
+            <input class="form-control mb-3" type="text" id="username" name="username" placeholder="Filter by username">
+            <select class="form-control form-select mb-3" id="correct" name="correct">
                 <option value="" selected hidden>Filter by score</option>
                 <option value="0">0</option>
                 <option value="1">1</option>

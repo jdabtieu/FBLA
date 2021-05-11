@@ -6,7 +6,7 @@
 <h1>Edit Problem</h1>
 <form autocomplete="off" method="post" id="create" name="create">
     <input
-        class="form-control form-group"
+        class="form-control mb-3"
         type="text"
         name="question"
         placeholder="Question"
@@ -23,7 +23,7 @@
                     required
                     style="display: inline;">
                 <input
-                    class="form-control form-group create-blank"
+                    class="form-control mb-3 create-blank"
                     name="{{ letter }}"
                     placeholder="Choice {{ letter }}"
                     value="{{ data[letter] }}"
@@ -41,7 +41,7 @@
                     required
                     style="display: inline;">
                 <input
-                    class="form-control form-group create-blank"
+                    class="form-control mb-3 create-blank"
                     name="{{ letter }}"
                     placeholder="Choice {{ letter }}"
                     value="{{ data[letter] }}"
@@ -52,7 +52,7 @@
         {% for letter in "abcd" %}
             <div>
                 <input
-                    class="form-control form-group"
+                    class="form-control mb-3"
                     name="{{ letter }}"
                     placeholder="Accepted answer"
                     value="{{ data[letter] if data[letter] else '' }}"
@@ -69,7 +69,7 @@
                     {{ "checked" if letter in data["correct"] }}
                     style="display: inline;">
                 <input
-                    class="form-control form-group create-blank"
+                    class="form-control mb-3 create-blank"
                     name="{{ letter }}"
                     placeholder="Choice {{ letter }}"
                     value="{{ data[letter] }}"
@@ -77,14 +77,14 @@
             </div>
         {% endfor %}
     {% endif %}
-    <select class="form-control form-group" name="difficulty">
+    <select class="form-control form-select mb-3" name="difficulty">
         <option value="Baby" {{ "selected" if data["difficulty"] == "Baby" }}>Baby</option>
         <option value="Easy" {{ "selected" if data["difficulty"] == "Easy" }}>Easy</option>
         <option value="Medium" {{ "selected" if data["difficulty"] == "Medium" }}>Medium</option>
         <option value="Hard" {{ "selected" if data["difficulty"] == "Hard" }}>Hard</option>
         <option value="Impossible" {{ "selected" if data["difficulty"] == "Impossible" }}>Impossible</option>
     </select>
-    <select class="form-control form-group" name="category">
+    <select class="form-control form-select mb-3" name="category">
         <option value="History" {{ "selected" if data["category"] == "History" }}>History</option>
         <option value="Events" {{ "selected" if data["category"] == "Events" }}>Events</option>
         <option value="Organization" {{ "selected" if data["category"] == "Organization" }}>Organization</option>

@@ -6,7 +6,7 @@
 <h1>FBLA Quiz</h1>
 <form method="post" action="/quiz/submit" autocomplete="off">
     {% for question in questions %}
-        <div class="form-group">
+        <div class="mb-3">
             <h3>{{ question["description"] }}</h3>
             {% if question["type"] == "MC" %}
                 {% for letter in "abcd" %}
@@ -55,7 +55,7 @@
                     style="display: none;"
                     checked>
             {% elif question["type"] == "Drop" %}
-                <select class="form-control form-group" name="{{ question['id'] }}">
+                <select class="form-control form-select mb-3" name="{{ question['id'] }}">
                     {% for letter in "abcd" %}
                         <option value="{{ question['id'] }}_{{ letter }}">{{ question[letter] }}</option>
                     {% endfor %}

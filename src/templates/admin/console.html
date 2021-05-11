@@ -20,9 +20,10 @@
 <hr>
 <p>
     The only thing maintenance mode should be used for is to make significant changes to the
-    database that requires nobody writes to it during that time, as well as 5 minutes before a
-    reboot to let users know that the site will be down momentarily. If the application is rebooted,
-    maintenance mode will turn itself off.
+    database that requires nobody writes to it during that time, as well as 5 minutes before
+    a reboot to let users know that the site will be down momentarily. If the application is
+    rebooted, maintenance mode will remain on. To disable it, log in as an admin account and
+    navigate back to this page or remove the 'maintenance_mode' file on the server.
 </p>
 <form action="/admin/maintenance" method="post">
     {% if maintenance_mode %}

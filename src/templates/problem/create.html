@@ -5,21 +5,21 @@
 {% block main %}
 <h1>Create Problem</h1>
 <form autocomplete="off" method="post" id="create" name="create">
-    <select class="form-control form-group" name="type" id="typeselect">
+    <select class="form-control form-select mb-3" name="type" id="typeselect">
         <option value="MC">Multiple Choice</option>
         <option value="TF">True/False</option>
         <option value="Drop">Dropdown</option>
         <option value="Blank">Fill in the Blank</option>
         <option value="Select">Select All</option>
     </select>
-    <input class="form-control form-group" type="text" name="question" placeholder="Question" required>
+    <input class="form-control mb-3" type="text" name="question" placeholder="Question" required>
     {% for letter in "abcd" %}
     <div id="{{ letter }}" class="inputs">
         <input type="radio" name="ans" value="{{ letter }}" required style="display: inline;">
-        <input class="form-control form-group create-blank blank" name="{{ letter }}" placeholder="Choice {{ letter }}" required>
+        <input class="form-control mb-3 create-blank blank" name="{{ letter }}" placeholder="Choice {{ letter }}" required>
     </div>
     {% endfor %}
-    <select class="form-control form-group" name="difficulty">
+    <select class="form-control form-select mb-3" name="difficulty">
         <option value="Medium" selected hidden>Difficulty</option>
         <option value="Baby">Baby</option>
         <option value="Easy">Easy</option>
@@ -27,14 +27,14 @@
         <option value="Hard">Hard</option>
         <option value="Impossible">Impossible</option>
     </select>
-    <select class="form-control form-group" name="category">
+    <select class="form-control form-select mb-3" name="category">
         <option value="Misc" selected hidden>Category</option>
         <option value="History">History</option>
         <option value="Events">Events</option>
         <option value="Organization">Organization</option>
         <option value="Misc">Misc</option>
     </select>
-    <div class="form-control form-group" style="border: 0;">
+    <div class="form-control mb-3" style="border: 0;">
         <input type="checkbox" id="draft" name="draft">
         <label for="draft">Draft?</label>
     </div>

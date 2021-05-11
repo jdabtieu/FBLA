@@ -81,6 +81,32 @@
 }
 
 /****************** MISC DISPLAY FIXES ***********************/
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex-grow: 1;
+}
+
+a, a.btn {
+    text-decoration: none;
+}
+
+.pagination a {
+    text-decoration: none!important;
+}
+
+a:hover, a:focus {
+    text-decoration: underline;
+}
+
+select.form-control, div.form-control {
+    background-color: unset!important;
+}
+
 .card {
     padding: 16px;
 }

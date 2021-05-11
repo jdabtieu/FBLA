@@ -1,3 +1,4 @@
+import os
 import sys
 import logging
 from datetime import datetime, timedelta
@@ -44,10 +45,20 @@ csrf.init_app(app)
 # Ensure that during maintenance mode, non-admins cannot access the site
 @app.before_request
 def check_for_maintenance():
-    global maintenance_mode
-    if maintenance_mode and request.path != '/login':
-        if not session or "admin" not in session or not session['admin']:
+    # Don't prevent login or getting assets
+    if request.path == '/login' or (request.path[0:8] == '/assets/'
+                                    and '..' not in request.path):
+        return
+
+    maintenance_mode = bool(os.path.exists('maintenance_mode'))
+    if maintenance_mode:
+        # Prevent Internal Server error if session only contains CSRF token
+        if not session or 'admin' not in session:
             return render_template("error/maintenance.html"), 503
+        elif not session['admin']:
+            return render_template("error/maintenance.html"), 503
+        else:
+            flash("Maintenance mode is enabled", "warning")        
 
 
 @app.route("/")
@@ -617,7 +628,8 @@ def delete_problem(problem_id):
 @app.route("/admin/console")
 @admin_required
 def admin_console():
-    return render_template("admin/console.html", maintenance_mode=maintenance_mode)
+    return render_template("admin/console.html",
+                           maintenance_mode=os.path.exists('maintenance_mode'))
 
 
 @csrf.exempt
@@ -836,13 +848,14 @@ def makeadmin():
 @app.route("/admin/maintenance", methods=["POST"])
 @admin_required
 def maintenance():
-    global maintenance_mode
-    maintenance_mode = not maintenance_mode
+    maintenance_mode = os.path.exists('maintenance_mode')
 
     if maintenance_mode:
-        flash("Enabled maintenance mode", "success")
-    else:
+        os.remove('maintenance_mode')
         flash("Disabled maintenance mode", "success")
+    else:
+        open('maintenance_mode', 'w').close()
+        flash("Enabled maintenance mode", "success")
 
     return redirect('/admin/console')
 

@@ -156,7 +156,7 @@ def login():
             },
             app.config['SECRET_KEY'],
             algorithm='HS256'
-        ).decode('utf-8')
+        )
         text = render_template('email/confirm_login_text.txt',
                                username=username, token=token)
 
@@ -233,7 +233,7 @@ def register():
         },
         app.config['SECRET_KEY'],
         algorithm='HS256'
-    ).decode('utf-8')
+    )
     text = render_template('email/confirm_account_text.txt',
                            username=username, token=token)
 
@@ -412,7 +412,7 @@ def forgotpassword():
             },
             app.config['SECRET_KEY'],
             algorithm='HS256'
-        ).decode('utf-8')
+        )
         text = render_template('email/reset_password_text.txt',
                                username=rows[0]["username"], token=token)
 

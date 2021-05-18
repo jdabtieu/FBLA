@@ -641,10 +641,12 @@ def admin_submissions():
     # Parse & prepare filters
     modifier = "WHERE"
     args = []
-
     if request.args.get("username"):
-        modifier += " username=? AND"
-        args.append(request.args.get("username"))
+        if request.args.get("username") == "None":
+            modifier += " username IS NULL AND"
+        else:
+            modifier += " username=? AND"
+            args.append(request.args.get("username"))
 
     if request.args.get("score"):
         modifier += " score=? AND"
@@ -654,22 +656,18 @@ def admin_submissions():
     if not page:
         page = "1"
     page = (int(page) - 1) * 50
+    modifier += " 1=1"
 
+    print(args)
+    print(modifier)
     # Query database for submissions and get number of submissions for pagination
-    if len(args) == 0:
-        submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
-                                  "LEFT JOIN users ON user_id=users.id LIMIT 50 "
-                                  "OFFSET ?"), page)
-        length = len(db.execute("SELECT * FROM submissions"))
-    else:
-        modifier = modifier[:-4]
-        length = len(db.execute(("SELECT submissions.*, users.username FROM submissions "
-                                 "LEFT JOIN users ON user_id=users.id ") + modifier,
-                                *args))
-        args.append(page)
-        submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
-                                 f"LEFT JOIN users ON user_id=users.id {modifier}"
-                                  " LIMIT 50 OFFSET ?"), *args)
+    length = len(db.execute(("SELECT submissions.*, users.username FROM submissions "
+                             "LEFT JOIN users ON user_id=users.id ") + modifier, *args))
+
+    args.append(page)
+    submissions = db.execute(("SELECT submissions.*, users.username FROM submissions "
+                              f"LEFT JOIN users ON user_id=users.id {modifier}"
+                              " LIMIT 50 OFFSET ?"), *args)
 
     return render_template("admin/submissions.html",
                            data=submissions, length=-(-length // 50))

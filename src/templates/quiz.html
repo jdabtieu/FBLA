@@ -36,6 +36,7 @@
                     <input
                         name="{{ question['id'] }}_blank"
                         placeholder="Fill in the Blank"
+                        class="form-control"
                         required>
             {% elif question["type"] == "Select" %}
                 {% for letter in "abcd" %}

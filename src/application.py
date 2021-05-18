@@ -16,7 +16,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import *
 
 app = Flask(__name__)
-maintenance_mode = False
 app.config.from_object('settings')
 app.config['SESSION_FILE_DIR'] = 'session/'
 
@@ -266,7 +265,8 @@ def confirm_register(token):
     if datetime.strptime(token["expiration"], "%Y-%m-%dT%H:%M:%S.%f") < datetime.utcnow():
         db.execute(
             "DELETE FROM users WHERE verified=0 and email=:email", email=token['email'])
-        flash("Email verification link expired; Please re-register", "danger")
+        flash("Email verification link expired. Please register again using the same email",  # noqa
+              "danger")
         return redirect("/register")
 
     db.execute("UPDATE users SET verified=1 WHERE email=:email", email=token['email'])

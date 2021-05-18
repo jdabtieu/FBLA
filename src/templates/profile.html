@@ -4,24 +4,48 @@
 
 {% block main %}
 <h2>View Profile</h2>
-<hr style="margin: 0 5px;">
+<hr style="margin: 0 5px 10px 5px;">
 <div class="flex-desktop">
-	<div style="flex: 2; margin-bottom: 1rem;">
-		<h2>{{ session.username }}</h2>
-		<br><br>
-		<h4>Actions</h4>
-		<a href="/settings/changepassword" role="button">Change Password</a>
-		<br>
-		<a href="/settings/toggle2fa" role="button">Toggle 2FA</a>
-	</div>
-	<div style="flex: 3">
-		<h4>Statistics</h4>
-		<p>Joined: <span class="dt">{{ user_data["join_date"] }}</span><br>
-		{% if recent_quiz %}
-			Most recent quiz: <a href="/quiz/results?id={{ recent_quiz['id'] }}"><span class="dt">{{ recent_quiz["date"] }}</span></a><br>
-		{% endif %}
-		Number of perfect scores: {{ perfects }}<br>
-		Number of quizzes taken: {{ total_quizzes }}</p>
-	</div>
+    <div style="flex: 1; margin-bottom: 1rem;">
+        <h2>{{ session.username }}</h2>
+    </div>
+    <div style="flex: 3">
+        <div>
+            <h4>Statistics</h4>
+            <p>Joined: <span class="dt">{{ user_data["join_date"] }}</span><br>
+            {% if recent_quiz %}
+                Most recent quiz: <a href="/quiz/results?id={{ recent_quiz['id'] }}"><span class="dt">{{ recent_quiz["date"] }}</span></a><br>
+            {% endif %}
+            Number of perfect scores: {{ perfects }}<br>
+            Number of quizzes taken: {{ total_quizzes }}</p>
+        </div>
+        <div>
+            <h4>User Settings</h4>
+            <table>
+                <thead>
+                    <tr></tr>
+                    <tr></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Username:</td>
+                        <td><input disabled value="{{ user_data['username'] }}"></td>
+                    </tr>
+                    <tr>
+                        <td>Email: </td>
+                        <td><input disabled value="{{ user_data['email'] }}"></td>
+                    </tr>
+                    <tr>
+                        <td>Password: </td>
+                        <td><input type="password" disabled value="********"> <a href="/settings/changepassword" role="button">Change Password</a></td>
+                    </tr>
+                    <tr>
+                        <td>Two-Factor Authentication: </td>
+                        <td><input disabled value="{{ 'On' if user_data['2fa'] else 'Off' }}"> <a href="/settings/toggle2fa" role="button">Toggle 2FA</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

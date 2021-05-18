@@ -3,16 +3,36 @@
 {% block title %}Home{% endblock %}
 
 {% block main %}
-<h1>FBLAquiz</h1>
-<h4>Welcome, {{ session.username }}</h4>
-<p>
-	Welcome to FBLAquiz, the leading FBLA quiz platform! To test your knowledge, simply click 'Take Quiz' above!<br>
-	If you need help, you may find solutions in the <a href="/help">Help</a> section.<br><br>
-	Happy quiz-taking!<br><br>
-	{% if most_difficult %}
-		Your least familar subject is {{ most_difficult }}. <a href="/quiz?type={{ most_difficult }}">Take a quiz on {{ most_difficult }}.</a>
-	{% else %}
-		You have not taken a quiz yet. Take one <a href="/quiz">here</a>.
-	{% endif %}
-</p>
+<h2>Welcome, {{ session.username }} :)</h2>
+<div class="row">
+    <div class="col-sm-6 admin-card">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Take a Quiz</h5>
+                <p class="card-text">Ready to take a quiz?</p>
+                <a class="btn btn-primary" href="/quiz" role="button">Take Quiz</a>
+            </div>
+        </div>
+    </div>
+    {% if most_difficult %}
+    <div class="col-sm-6 admin-card">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your Weakest Subject</h5>
+                <p class="card-text">Your weakest subject is {{ most_difficult }}. Do you want to train it?</p>
+                <a class="btn btn-primary" href="/quiz?type={{ most_difficult }}" role="button">Take a quiz on {{ most_difficult }}</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-sm-6 admin-card">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Past Quizzes</h5>
+                <p class="card-text">View your past quizzes. Maybe study the questions you got wrong?</p>
+                <a class="btn btn-primary" href="/submissions" role="button">My Quizzes</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -80,6 +80,11 @@
     }
 }
 
+/****************** ADMIN PAGE LAYOUT **********************/
+.admin-card {
+    padding: calc(var(--bs-gutter-x)/ 2)
+}
+
 /****************** MISC DISPLAY FIXES ***********************/
 body {
     display: flex;
@@ -91,7 +96,7 @@ main {
     flex-grow: 1;
 }
 
-a, a.btn {
+a, a.btn, nav a:hover, a.btn:hover {
     text-decoration: none;
 }
 

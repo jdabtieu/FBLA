@@ -4,13 +4,13 @@ Prerequisites: Python 3
 For specific instructions for Gunicorn + Nginx on Ubuntu, scroll down to that section.
 
 # General Installation Instructions
-It is strongly encouraged to use a virtualenv. If you are not using a virtualenv, change all the `python` commands to `python3` and `pip` to `pip3`.
+It is strongly encouraged to use a virtualenv.
 
 ## Setting up the project
 ```bash
 $ git clone --depth 1 https://github.com/jdabtieu/FBLA.git
-$ cd FBLA
-$ python3 -m venv .
+$ cd FBLA/src
+$ python -m venv .
 ```
 (On Windows, you may need to enter `python -m venv .` instead of using `python3`).
 Then, you should activate the virtualenv by running one of the following commands (depending on your platform):
@@ -83,7 +83,7 @@ $ mkdir -p /path/to/install
 $ cd /path/to/install
 $ git clone --depth 1 https://github.com/jdabtieu/FBLA.git
 $ cd FBLA/src
-$ python3 -m venv .
+$ python -m venv .
 $ . bin/activate
 ```
 At this point, your terminal should change to something like this to indicate that you are in a virtual environment now: `(src) user@host:/path/to/install/FBLA/src$`.
@@ -99,7 +99,7 @@ Note that because you are in a virtual environment, you should use the `pip` com
 
 Now, we should run the install script and change the configuration settings.
 ```bash
-$ python3 install.py
+$ python install.py
 $ nano settings.py
 ```
 In settings.py, you should add your email credentials as indicated. Additionally, you may change the other email settings if you use a SMTP provider other than Gmail. This email account will be used to send system emails, such as password reset emails.

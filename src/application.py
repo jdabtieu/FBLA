@@ -369,14 +369,20 @@ def changepassword():
 @app.route("/settings/toggle2fa", methods=["GET", "POST"])
 @login_required
 def toggle2fa():
-    rows = db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])[0]
+    user = db.execute("SELECT * FROM users WHERE id=:id", id=session["user_id"])[0]
 
     if request.method == "GET":
-        return render_template("auth/2fa_confirm.html", enabled=rows["twofa"])
+        return render_template("auth/2fa_confirm.html", enabled=user["twofa"])
 
     # Reached via POST
 
-    if rows["twofa"]:
+    password = request.form.get("password")
+
+    if not password or not check_password_hash(user['password'], password):
+        flash('Incorrect password', 'danger')
+        return render_template("auth/2fa_confirm.html", enabled=user["twofa"]), 401
+
+    if user["twofa"]:
         db.execute("UPDATE users SET twofa=0 WHERE id=:id", id=session["user_id"])
         flash("2FA successfully disabled", "success")
     else:

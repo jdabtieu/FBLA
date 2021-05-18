@@ -4,9 +4,10 @@
 
 {% block main %}
 <h1>Toggle 2FA</h1>
-<p>Two-factor authentication is currently {{ "enabled" if enabled else "disabled" }}</p>
+<p>Please enter your current password to confirm this action.</p>
 <form method="post">
-    <button class="btn btn-primary" type="submit">{{ "Disable" if enabled else "Enable" }} 2FA</button>
+    <input class="form-control mb-3" name="password" placeholder="Current Password" type="password" autocomplete="current-password" required>
+    <button class="btn btn-primary" type="submit">{{ 'Disable' if enabled else 'Enable' }} 2FA</button>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 </form>
 {% endblock %}

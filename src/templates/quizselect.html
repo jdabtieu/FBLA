@@ -6,6 +6,18 @@
 {% if not session.username %}
     <div class="text-center">Are you sure you do not want to <a href="/register">create an account</a>? Creating an account will let you save results and get a personalized training plan.</div>
 {% endif %}
+<div>
+    <br>
+        <p class="text-center">
+        The quiz will have 5 random questions, about anything from the FBLA organization to
+        competitive events, to historic facts! Be prepared to have to scour the FBLA website,
+        Wikipedia, Google, or any other internet resource! A printable report as well as results
+        will be available after competing the quiz{% if session.username %}, and in your account
+        too{% endif %}.
+        <br><br>
+        Good luck!
+    </p>
+</div>
 <form method="post" autocomplete="off">
 	{% if ptype %}
 		<input type="hidden" name="ptype" value="{{ ptype }}">

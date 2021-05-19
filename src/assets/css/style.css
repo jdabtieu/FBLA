@@ -152,11 +152,7 @@ td {
 }
 
 @media print {
-    .print-button {
-        display: none!important;
-    }
-
-    footer {
+    footer, nav, .print-button {
         display: none!important;
     }
 

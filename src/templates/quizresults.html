@@ -14,7 +14,7 @@
 {% endif %}
 <i>Quiz taken at <span class="dt">{{ sub["date"] }}</span></i>
 <h5>Score: {{ sub["score"] }}/5</h5>
-<h5>Taken By: {{ sub["username"] if sub["username"] else "Anonymous" }}</h5>
+<h5>Taken By: <span {{ 'contenteditable style=background-color:yellow' if not sub["username"] }}>{{ sub["username"] if sub["username"] else "Enter your name here..." }}</span></h5>
 <p>{{ msg }}</p>
 {% for question in sub_data %}
     <div class="form-group">
@@ -52,6 +52,7 @@
                         type="radio"
                         id="{{ question['id'] }}_{{ letter }}"
                         name="{{ question['id'] }}"
+                        class="form-check-input"
                         value="{{ question['id'] }}_{{ letter }}"
                         {{ "checked" if question["answer"] == letter }} disabled>
                     <label
@@ -68,6 +69,7 @@
                         type="radio"
                         id="{{ question['id'] }}_{{ letter }}"
                         name="{{ question['id'] }}"
+                        class="form-check-input"
                         value="{{ question['id'] }}_{{ letter }}"
                         {{ "checked" if question["answer"] == letter }} disabled>
                     <label
@@ -85,8 +87,8 @@
                 disabled><br>
             <p>Accepted answers:
                 {% for letter in "abcd" %}
-                    {% if question[letter] is not none %}
-                        {{ question[letter] }}&nbsp;
+                    {% if question[letter] %}
+                        {{ question[letter] }},
                     {% endif %}
                 {% endfor %}
             </p>
@@ -98,6 +100,7 @@
                         id="{{ question['id'] }}_{{ letter }}"
                         name="{{ question['id'] }}"
                         value="{{ question['id'] }}_{{ letter }}"
+                        class="form-check-input"
                         {{ "checked" if letter in question["answer"] }} disabled>
                     <label
                         for="{{ question['id'] }}_{{ letter }}"
@@ -113,5 +116,9 @@
     if (navigator.share) {
         $('.print-button').after('<button onclick="navigator.share({title: \'I scored {{ sub["score"] }}/5 on FBLAquiz. Can you match me?\',url: window.location.origin});" class="print-button mobile">Share <img src="/assets/images/share.svg" onerror="this.src=\'/assets/images/share.png\'" class="icon"></button>')
     }
+    $("span").keypress(function(e) {
+        e.target.style.backgroundColor = "";
+        return e.which != 13;
+    });
 </script>
 {% endblock %}

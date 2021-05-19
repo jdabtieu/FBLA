@@ -19,6 +19,7 @@
                         <input
                             type="radio"
                             id="{{ data['id'] }}_{{ letter }}"
+                            class="form-check-input"
                             {{ "checked" if data["correct"] == letter }} disabled>
                         <label for="{{ data['id'] }}_{{ letter }}">
                             {{ data[letter] }}
@@ -31,6 +32,7 @@
                         <input
                             type="radio"
                             id="{{ data['id'] }}_{{ letter }}"
+                            class="form-check-input"
                             {{ "checked" if data["correct"] == letter }} disabled>
                         <label for="{{ data['id'] }}_{{ letter }}">
                             {{ data[letter] }}
@@ -40,8 +42,8 @@
             {% elif data['type'] == 'Blank' %}
                 <p>Accepted answers:
                     {% for letter in "abcd" %}
-                        {% if data[letter] is not none %}
-                            {{ data[letter] }}&nbsp;
+                        {% if data[letter] %}
+                            {{ data[letter] }},
                         {% endif %}
                     {% endfor %}
                 </p>
@@ -51,6 +53,7 @@
                         <input
                             type="checkbox"
                             id="{{ data['id'] }}_{{ letter }}"
+                            class="form-check-input"
                             {{ "checked" if letter in data["correct"] }} disabled>
                         <label for="{{ data['id'] }}_{{ letter }}">
                             {{ data[letter] }}

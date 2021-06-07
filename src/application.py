@@ -57,7 +57,7 @@ def check_for_maintenance():
         elif not session['admin']:
             return render_template("error/maintenance.html"), 503
         else:
-            flash("Maintenance mode is enabled", "warning")        
+            flash("Maintenance mode is enabled", "warning")
 
 
 @app.route("/")

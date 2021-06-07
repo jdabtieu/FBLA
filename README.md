@@ -23,7 +23,7 @@ Users can get personalized tips to help them perform better. By creating an acco
 ### Private and Secure
 We take data security very seriously. We do not collect any data about you, the sysadmin, or any users. All data that users send to the site, including passwords and other form data are encrypted with industry-grade encryption. We also do not sell your data, and more information about how we handle user data is available in the Privacy Policy.
 
-## Installation
+## Installation and Quickstart
 See [INSTALL.md](docs/INSTALL.md).
 
 ## Usage

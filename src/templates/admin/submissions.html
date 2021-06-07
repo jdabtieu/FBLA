@@ -5,7 +5,7 @@
 {% block main %}
 <h1>Submissions</h1>
 <div id="pagination"></div>
-<div class="flex">
+<div class="flex-desktop">
     <div style="flex: 3; overflow: auto;">
         <table class="table table-hover table-full-width" style="min-width: 400px;">
             <thead class="table-dark">
@@ -30,7 +30,7 @@
             </tbody>
         </table>
     </div>
-    <div style="flex: 1; margin-left: 8px;" id="submission-search-right">
+    <div style="flex: 1; margin-left: 8px;">
         <div class="card">
             <h3>Filter Submissions</h3>
             <form>
@@ -47,24 +47,6 @@
                 <input class="btn btn-primary" type="submit" value="Filter!">
             </form>
         </div>
-    </div>
-</div>
-<div id="submission-search-bottom">
-    <div class="card">
-        <h3>Filter Submissions</h3>
-        <form>
-            <input class="form-control mb-3" type="text" id="username" name="username" placeholder="Filter by username">
-            <select class="form-control form-select mb-3" id="correct" name="correct">
-                <option value="" selected hidden>Filter by score</option>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
-            <input class="btn btn-primary" type="submit" value="Filter!">
-        </form>
     </div>
 </div>
 <script>

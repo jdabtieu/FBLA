@@ -67,19 +67,6 @@
     }
 }
 
-/****************** SUBMISSIONS PAGE LAYOUT ******************/
-@media screen and (min-width: 990px) {
-    #submission-search-bottom {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 989px) {
-    #submission-search-right {
-        display: none;
-    }
-}
-
 /****************** ADMIN PAGE LAYOUT **********************/
 .admin-card {
     padding: calc(var(--bs-gutter-x)/ 2)
@@ -181,13 +168,13 @@ td {
     background-color: #006be8!important;
 }
 
-@media screen and (max-width: 499px) {
+@media screen and (max-width: 700px) {
     .desktop {
         display: none;
     }
 }
 
-@media screen and (min-width: 500px) {
+@media screen and (min-width: 701px) {
     .mobile {
         display: none;
     }

@@ -67,10 +67,40 @@
     }
 }
 
-/****************** ADMIN PAGE LAYOUT **********************/
+/****************** ADMIN PAGE LAYOUT ************************/
 .admin-card {
     padding: calc(var(--bs-gutter-x)/ 2)
 }
+
+.create-blank {
+    display: inline;
+    width: calc(100% - 20px);
+    margin-left: 2px;
+}
+
+/****************** QUIZ PAGES LAYOUT ************************/
+.post-quiz-icon {
+    width: 24px;
+    margin-left: 12px;
+    position: absolute;
+    bottom: 1px;
+}
+
+.zen {
+    background-color: #dceeff;
+}
+
+.print-button {
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    margin: 4px;
+}
+
+.post-quiz-icon.svg-red {
+    bottom: -4px;
+}
+
 
 /****************** MISC DISPLAY FIXES ***********************/
 body {
@@ -81,6 +111,8 @@ body {
 
 main {
     flex-grow: 1;
+    padding-top: 3rem!important;
+    padding-bottom: 3rem!important;
 }
 
 a, a.btn, nav a:hover, a.btn:hover {
@@ -111,35 +143,12 @@ select.form-control, div.form-control {
     width: 16px;
 }
 
-.post-quiz-icon {
-    width: 24px;
-    margin-left: 12px;
-    position: absolute;
-    bottom: 1px;
-}
-
-.zen {
-    background-color: #dceeff;
-}
-
 table {
     table-layout: fixed;
 }
 
-main {
-    padding-top: 3rem!important;
-    padding-bottom: 3rem!important;
-}
-
 td {
     word-break: break-word;
-}
-
-.print-button {
-    padding: 0;
-    border: 0;
-    background-color: transparent;
-    margin: 4px;
 }
 
 @media print {
@@ -197,19 +206,8 @@ label {
     display: inline;
 }
 
-.post-quiz-icon.svg-red {
-    bottom: -4px;
-}
-
 .hidden {
     display: none!important;
-}
-
-/****************** ADMIN INTERFACE **************************/
-.create-blank {
-    display: inline;
-    width: calc(100% - 20px);
-    margin-left: 2px;
 }
 
 /****************** COLOURS **********************************/

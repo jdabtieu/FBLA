@@ -34,6 +34,7 @@ db.execute("INSERT INTO 'users' VALUES(1, 'admin', ?, ?, datetime('now'), 1, 0, 
 
 # Configure application
 os.mkdir("logs")
+open("logs/application.log", "w").close()
 os.mkdir("session")
 os.chmod("session", 0o700)
 import daily_tasks  # noqa
@@ -41,5 +42,5 @@ shutil.copy2("default_settings.py", "settings.py")
 
 # Generate new secret key
 secret = secrets.token_hex(48)  # 384 bits
-with open('secret_key.txt', 'w') as file:
+with open("secret_key.txt", "w") as file:
     file.write(secret)

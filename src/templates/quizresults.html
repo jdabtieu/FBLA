@@ -10,17 +10,17 @@
 </div>
 <h1>FBLA Quiz Results</h1>
 {% if not "user_id" in session %}
-    <p>Did you know? You can <a href="/register">register an account</a> or <a href="/login">sign in</a> to save your results!</p>
+    <p style="margin: 0;">Did you know? You can <a href="/register">register an account</a> or <a href="/login">sign in</a> to save your results!</p>
 {% endif %}
-<i>Quiz taken at <span class="dt">{{ sub["date"] }}</span></i>
-<h5>Score: {{ sub["score"] }}/5</h5>
-<h5>Taken By: <span {{ 'contenteditable style=background-color:yellow' if not sub["username"] }}>{{ sub["username"] if sub["username"] else "Enter your name here..." }}</span></h5>
+<h6>Date: <span class="dt">{{ sub["date"] }}</span></h6>
+<h6>Score: {{ sub["score"] }}/5</h6>
+<h6>Taken By: <span {{ 'contenteditable style=background-color:yellow' if not sub["username"] }}>{{ sub["username"] if sub["username"] else "Enter your name here..." }}</span></h6>
 <p>{{ msg }}</p>
 {% for question in sub_data %}
     <div class="form-group">
         <div>
             <div style="position: relative;">
-                <h3 style="display: inline;">{{ question["description"] }}</h3>
+                <h4 style="display: inline;">{{ question["description"] }}</h4>
                 {% if question['type'] == 'Blank' %}
                     {% if question['answer'] == question['a'] or question['answer'] == question['b'] or question['answer'] == question['c'] or question['answer'] == question['d'] %}
                         <img class="svg-green post-quiz-icon"

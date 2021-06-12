@@ -96,7 +96,7 @@ a:hover, a:focus {
 }
 
 select.form-control, div.form-control {
-    background-color: unset!important;
+    background-color: #fff!important;
 }
 
 .card {
@@ -116,6 +116,10 @@ select.form-control, div.form-control {
     margin-left: 12px;
     position: absolute;
     bottom: 1px;
+}
+
+.zen {
+    background-color: #dceeff;
 }
 
 table {
@@ -193,6 +197,14 @@ label {
     display: inline;
 }
 
+.post-quiz-icon.svg-red {
+    bottom: -4px;
+}
+
+.hidden {
+    display: none!important;
+}
+
 /****************** ADMIN INTERFACE **************************/
 .create-blank {
     display: inline;
@@ -223,4 +235,15 @@ label {
 
 .svg-green {
     filter: invert(57%) sepia(58%) saturate(3606%) hue-rotate(83deg) brightness(118%) contrast(125%);
+}
+
+/****************** ANIMATIONS *******************************/
+@keyframes fade-in {
+    0%   {opacity: 0;}
+    100% {opacity: 100%;}
+}
+
+main {
+    animation-name: fade-in;
+    animation-duration: 0.5s;
 }

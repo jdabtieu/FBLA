@@ -2,26 +2,30 @@
 
 {% block title %}Start Quiz{% endblock %}
 {% block main %}
-<h3 class="text-center" style="margin-top: 5%;">Ready to start the quiz?</h3>
-{% if not session.username %}
-    <div class="text-center">Are you sure you do not want to <a href="/register">create an account</a>? Creating an account will let you save results and get a personalized training plan.</div>
-{% endif %}
-<div>
-    <br>
-        <p class="text-center">
-        The quiz will have 5 random questions, about anything from the FBLA organization to
-        competitive events, to historic facts! Be prepared to have to scour the FBLA website,
-        Wikipedia, Google, or any other internet resource! A printable report as well as results
-        will be available after competing the quiz{% if session.username %}, and in your account
-        too{% endif %}.
-        <br><br>
-        Good luck!
-    </p>
+
+<div class="card" style="padding: 32px 16px; margin-top: 5%;">
+    <h3 class="text-center">Ready to start the quiz?</h3>
+    {% if not session.username %}
+        <div class="text-center">Are you sure you do not want to <a href="/register">create an account</a>? Creating an account will let you save results and get a personalized training plan.</div>
+    {% endif %}
+    <div>
+        <br>
+            <p class="text-center">
+            The quiz will have 5 random questions, about anything from the FBLA organization to
+            competitive events, to historic facts! Be prepared to have to scour the FBLA website,
+            Wikipedia, Google, or any other internet resource! A printable report as well as results
+            will be available after competing the quiz{% if session.username %}, and in your account
+            too{% endif %}.
+            <br><br>
+            Good luck!
+        </p>
+    </div>
+    <form method="post" autocomplete="off">
+        {% if ptype %}
+            <input type="hidden" name="ptype" value="{{ ptype }}">
+        {% endif %}
+        <input class="btn btn-primary btn-lg" type="submit" id="submit" name="submit" value="Start Quiz" style="margin-top: 1rem; margin-left: 50%; transform: translate(-50%);">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    </form>
 </div>
-<form method="post" autocomplete="off">
-	{% if ptype %}
-		<input type="hidden" name="ptype" value="{{ ptype }}">
-	{% endif %}
-    <input class="btn btn-primary btn-lg" type="submit" id="submit" name="submit" value="Start Quiz" style="margin-top: 1rem; margin-left: 50%; transform: translate(-50%);">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 {% endblock %}

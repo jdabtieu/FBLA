@@ -51,7 +51,12 @@
 </div>
 <script>
     var queryStrings = new URL(window.location.href).searchParams;
-    if (queryStrings.get("username") != false) $("form #username").attr("value", queryStrings.get("username"));
+    if (queryStrings.get("username") != null) {
+        $("form #username").attr("value", queryStrings.get("username"));
+    }
+    if (queryStrings.get("score") != null) {
+        $("#score").val(queryStrings.get("score"));
+    }
     var total_length = {{ length }};
 </script>
 {% endblock %}

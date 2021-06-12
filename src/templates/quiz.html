@@ -3,7 +3,13 @@
 {% block title %}Quiz{% endblock %}
 
 {% block main %}
-<h1>FBLA Quiz</h1>
+<div style="position: relative;">
+    <button onclick="zen()" class="print-button">
+        <img src="/assets/images/leaf-solid.svg" class="icon">
+        Zen Mode
+    </button>
+</div>
+<div style="height: 24px;"> </div>
 <form method="post" action="/quiz/submit" autocomplete="off">
     {% for question in questions %}
         <div class="mb-3">
@@ -70,4 +76,11 @@
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <input class="btn btn-primary" type="submit" id="submit" name="submit" value="Submit">
 </form>
+<script>
+    function zen() {
+        $("nav").toggleClass("hidden");
+        $("footer").toggleClass("hidden");
+        $("body").toggleClass("zen");
+    }
+</script>
 {% endblock %}

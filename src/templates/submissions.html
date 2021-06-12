@@ -47,6 +47,10 @@
     </div>
 </div>
 <script>
+    var queryStrings = new URL(window.location.href).searchParams;
     var total_length = {{ length }};
+    if (queryStrings.get("score") != null) {
+        $("#score").val(queryStrings.get("score"));
+    }
 </script>
 {% endblock %}

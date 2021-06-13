@@ -36,7 +36,7 @@
                 <input
                     type="radio"
                     name="ans"
-                    value="{{ 'True' if letter == 'a' else 'False' }}"
+                    value="{{ letter }}"
                     {{ "checked" if data["correct"] == letter }}
                     required
                     style="display: inline;">

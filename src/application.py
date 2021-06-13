@@ -583,7 +583,7 @@ def editproblem(problem_id):
 
     if not question or not difficulty or not category:
         flash("You did not fill all required fields", "danger")
-        return render_template("problem/create.html"), 400
+        return render_template("problem/editproblem.html", data=data[0]), 400
 
     ans = request.form.get("ans")
     a = request.form.get("a")
@@ -592,18 +592,20 @@ def editproblem(problem_id):
     d = request.form.get("d")
 
     if not check_problem(qtype, ans, a, b, c, d):
+        print(qtype, ans, a, b, c, d)
         flash("You did not fill all required fields", "danger")
-        return render_template("problem/create.html"), 400
+        return render_template("problem/editproblem.html", data=data[0]), 400
 
     # Extra steps for storage of different question types
     if qtype == "TF":
-        c = None
-        d = None
-
-    if qtype == "Blank":
+        db.execute(("UPDATE problems SET description=?, a=?, b=?, correct=?, "
+                    "category=?, difficulty=? WHERE id=?"),
+                   question, a, b, ans, category, difficulty, problem_id)
+        flash('Problem successfully edited', 'success')
+        return redirect("/problem/" + problem_id)
+    elif qtype == "Blank":
         ans = ""
-
-    if qtype == "Select":
+    elif qtype == "Select":
         all_ans = request.form.getlist("ans")
         ans = ""
         for letter in all_ans:
@@ -643,8 +645,6 @@ def admin_console():
 @app.route("/admin/submissions")
 @admin_required
 def admin_submissions():
-    submissions = None
-
     # Parse & prepare filters
     modifier = "WHERE"
     args = []
@@ -728,13 +728,18 @@ def createproblem():
         return render_template("problem/create.html"), 400
 
     if qtype == "TF":
-        c = None
-        d = None
+        db.execute(("INSERT INTO problems (type, description, a, b, correct, category, "
+                    "difficulty, draft) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"),
+                   qtype, question, a, b, ans, category, difficulty, draft)
 
-    if qtype == "Blank":
+        problem_id = db.execute("SELECT * FROM problems ORDER BY id DESC LIMIT 1")[0]["id"]
+
+        flash('Problem successfully created', 'success')
+        return redirect("/problem/" + str(problem_id))
+    elif qtype == "Blank":
         ans = ""
 
-    if qtype == "Select":
+    elif qtype == "Select":
         all_ans = request.form.getlist("ans")
         ans = ""
         for letter in all_ans:
@@ -927,15 +932,14 @@ def quiz_submit():
     answers = parse_quiz_answers(request.form)
     correct = 0
 
-    # Check if user is logged in
-    uid = None
-    if session and "user_id" in session:
-        uid = session["user_id"]
-
     # Create blank submission & get unique ID
-    db.execute(("INSERT INTO submissions (user_id, score, date) "
-                "VALUES(-1, 0, datetime('now'))"))
+    db.execute("INSERT INTO submissions (score, date) VALUES(0, datetime('now'))")
     subid = db.execute("SELECT id FROM submissions ORDER BY id DESC LIMIT 1")[0]["id"]
+
+    # Update user ID if logged in
+    if session and "user_id" in session:
+        db.execute("UPDATE submissions SET user_id=? WHERE id=?",
+                   session["user_id"], subid)
 
     # Check answers
     for answer in answers:
@@ -970,9 +974,8 @@ def quiz_submit():
         db.execute("INSERT INTO submissions_data VALUES(?, ?, ?, ?)",
                    subid, data[0]["id"], user_ans, int(this_correct))
 
-    # Update score & user_id of submission
-    db.execute("UPDATE submissions SET user_id=?, score=? WHERE id=?",
-               uid, correct, subid)
+    # Update score of submission
+    db.execute("UPDATE submissions SET score=? WHERE id=?", correct, subid)
 
     return redirect("/quiz/results?id=" + str(subid))
 
@@ -981,8 +984,6 @@ def quiz_submit():
 @app.route("/submissions")
 @login_required
 def user_submissions():
-    submissions = None
-
     modifier = ""
     args = []
 
@@ -994,20 +995,14 @@ def user_submissions():
     if not page:
         page = "1"
     page = (int(page) - 1) * 50
+    args.insert(0, session["user_id"])
 
     # Query database for submissions and get number of submissions for pagination
-    if len(args) == 0:
-        submissions = db.execute(("SELECT * FROM submissions WHERE user_id=? LIMIT 50 "
-                                  "OFFSET ?"), session["user_id"], page)
-        length = len(db.execute(
-            "SELECT * FROM submissions WHERE user_id=?", session["user_id"]))
-    else:
-        args.insert(0, session["user_id"])
-        length = len(db.execute(
-            "SELECT * FROM submissions WHERE user_id=?" + modifier, *args))
-        args.append(page)
-        submissions = db.execute("SELECT * FROM submissions WHERE user_id=?" + modifier +
-                                 " LIMIT 50 OFFSET ?", *args)
+    length = len(db.execute(
+        "SELECT * FROM submissions WHERE user_id=?" + modifier, *args))
+    args.append(page)
+    submissions = db.execute("SELECT * FROM submissions WHERE user_id=?" + modifier +
+                             " LIMIT 50 OFFSET ?", *args)
 
     return render_template("submissions.html", data=submissions, length=-(-length // 50))
 

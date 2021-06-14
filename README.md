@@ -8,8 +8,8 @@ User account credentials: `user:FBLAuser`<br>
 Alternatively, you may create your own account.
 
 ## Features
-### Cross-Platform
-Although running FBLAquiz on a modern Linux distro is recommended, it runs on any modern version of Windows, MacOS, and Linux. The only requirements are Python 3, and access to an administrator (root) account. More details can be found in [INSTALL.md](docs/INSTALL.md).
+### Easy Installation
+Although running FBLAquiz on a modern Linux distro is recommended, it runs on any modern version of Windows, MacOS, and Linux. The only requirements are Python 3, and access to an administrator (root) account. More details can be found in [INSTALL.md](docs/INSTALL.md). The actual installation process is also very short and simple, taking at most 15 minutes, even on a slow office computer.
 
 ### Comprehensive Admin Tools
 Admins of a site get access to a multitude of tools, including the ability to ban users or remotely reset passwords. Admins also get statistics on problems, such as the solve rate and number of submissions. As well, problems can be created, edited, and deleted at any time. All of these features can be accessed through the web interface. For more advanced admins, interacting with the database using sqlite3 is also possible, but not recommended.

@@ -3,6 +3,8 @@ Prerequisites: Python 3
 
 This quide assumes that `python` is `python3`. If your Python installation points to python2, you should use `python3` instead of `python` for commands in this guide.
 
+For updating instructions, click [here](#updating).
+
 For specific instructions for Gunicorn + Nginx on Ubuntu, click [here](#installation-for-nginx--gunicorn-on-ubuntu).
 
 # General Installation Instructions
@@ -192,3 +194,14 @@ This is caused by invalid email credentials, or your email provider blocking acc
 2. Depending on the service you use, the option may be called something different. On Gmail, it's called "less secure access." Make sure this is enabled.
 3. While signed into Gmail, go to the following link https://accounts.google.com/DisplayUnlockCaptcha and then trigger sending an email again (e.g. by requesting a password reset).
 4. Google will sometimes turn off less secure access automatically if you haven't sent emails in a while. If this error appears out of nowhere, check the settings.
+
+# Updating
+To update, first fetch the newest version from GitHub. This can be done with
+```bash
+$ git pull
+```
+
+Then, to apply changes, run
+```bash
+$ sudo systemctl restart FBLAquiz
+```

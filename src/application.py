@@ -592,7 +592,6 @@ def editproblem(problem_id):
     d = request.form.get("d")
 
     if not check_problem(qtype, ans, a, b, c, d):
-        print(qtype, ans, a, b, c, d)
         flash("You did not fill all required fields", "danger")
         return render_template("problem/editproblem.html", data=data[0]), 400
 
@@ -665,8 +664,6 @@ def admin_submissions():
     page = (int(page) - 1) * 50
     modifier += " 1=1"
 
-    print(args)
-    print(modifier)
     # Query database for submissions and get number of submissions for pagination
     length = len(db.execute(("SELECT submissions.*, users.username FROM submissions "
                              "LEFT JOIN users ON user_id=users.id ") + modifier, *args))

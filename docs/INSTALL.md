@@ -110,7 +110,7 @@ We'll now need to create a systemd service unit file.
 $ sudo nano /etc/systemd/system/FBLAquiz.service
 ```
 In this file, paste in the following content, remembering to replace `/path/to/install` and the user.
-```
+```ini
 [Unit]
 Description=Gunicorn instance to serve FBLAquiz
 After=network.target
@@ -142,7 +142,7 @@ Now it's time to allow Nginx to communicate with Gunicorn.
 $ sudo nano /etc/nginx/sites-available/FBLAquiz
 ```
 In this file, paste in the following, making sure to replace `/path/to/install` and the domain.
-```
+```nginx
 server {
     listen 80;
     server_name YOUR_DOMAIN www.YOUR_DOMAIN;

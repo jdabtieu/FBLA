@@ -116,6 +116,26 @@
     bottom: -4px;
 }
 
+#quiz-form div.mb-2 {
+    padding: 2px 0;
+    border-radius: 10px;
+    display: table;
+    cursor: pointer;
+}
+
+#quiz-form div.mb-2 label {
+    cursor: inherit;
+    padding: 4px 16px 4px 6px;
+}
+
+#quiz-form div.mb-2 input {
+    cursor: inherit;
+    margin-left: 2px;
+}
+
+#quiz-form div.mb-2:hover {
+    background-color: #e0e0e0;
+}
 
 /****************** MISC DISPLAY FIXES ***********************/
 body {

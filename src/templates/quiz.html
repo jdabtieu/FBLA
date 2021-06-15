@@ -10,7 +10,7 @@
     </button>
 </div>
 <div style="height: 24px;"> </div>
-<form method="post" action="/quiz/submit" autocomplete="off">
+<form method="post" action="/quiz/submit" autocomplete="off" id="quiz-form">
     {% for question in questions %}
         <div class="mb-3">
             <h3>{{ question["description"] }}</h3>

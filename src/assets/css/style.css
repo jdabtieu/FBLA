@@ -82,6 +82,12 @@
     }
 }
 
+/****************** HELP PAGE LAYOUT *************************/
+.help-img {
+    max-width: 95vw;
+    overflow-x: auto;
+}
+
 /****************** ADMIN PAGE LAYOUT ************************/
 .admin-card {
     padding: calc(var(--bs-gutter-x)/ 2)
@@ -286,6 +292,7 @@ main {
 @media screen and (min-width: 1360px) {
     ::-webkit-scrollbar {
         width: 8px;
+        height: 8px;
     }
 
     ::-webkit-scrollbar-track {

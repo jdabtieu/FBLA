@@ -118,19 +118,19 @@
 
 #quiz-form div.mb-2 {
     padding: 2px 0;
-    border-radius: 10px;
+    border-radius: 13px;
     display: table;
     cursor: pointer;
 }
 
 #quiz-form div.mb-2 label {
     cursor: inherit;
-    padding: 4px 16px 4px 6px;
+    padding: 4px 10px 4px 6px;
 }
 
 #quiz-form div.mb-2 input {
     cursor: inherit;
-    margin-left: 2px;
+    margin-left: 4px;
 }
 
 #quiz-form div.mb-2:hover {
@@ -143,6 +143,7 @@ body {
     min-height: 100vh;
     flex-direction: column;
     scroll-behavior: smooth;
+    overflow: overlay;
 }
 
 main {
@@ -280,4 +281,23 @@ label {
 main {
     animation-name: fade-in;
     animation-duration: 0.5s;
+}
+
+@media screen and (min-width: 1360px) {
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 }

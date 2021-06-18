@@ -91,7 +91,8 @@ $ nano settings.py
 ```
 In settings.py, you should add your email credentials as indicated. Additionally, you may change the other email settings if you use a SMTP provider other than Gmail. This email account will be used to send system emails, such as password reset emails.
 
-You should be able to run the program in debug mode using `python application.py` now. Ensure that it works, and you can shut it down with `Ctrl+C` after 10-15 seconds if no errors occur.
+## Step 3.5 - Logging in for the first time
+You should be able to run the program in debug mode using `python application.py` now. Try logging in to the admin account using the credentials `admin:FBLAadmin`. Make sure you change the password immediately after logging in. Enabling 2FA is also recommended for the admin account. You can change your password and enable 2FA through the profile page. If no errors occur, you can shut it down with `Ctrl+C` and continue to the next step.
 
 ## Step 4 - Configuring Gunicorn
 We need to tell Gunicorn to import our app.

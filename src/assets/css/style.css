@@ -6,6 +6,34 @@
     position: relative;
     overflow: hidden;
     height: calc(100vh - 56px);
+    background-image: url(/assets/images/home-768.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+@media screen and (min-width: 769px and max-width: 1024px) {
+    #banner {
+        background-image: url(/assets/images/home-1024.jpg);
+    }
+}
+
+@media screen and (min-width: 1025px and max-width: 1366px) {
+    #banner {
+        background-image: url(/assets/images/home-1366.jpg);
+    }
+}
+
+@media screen and (min-width: 1367px and max-width: 1600px) {
+    #banner {
+        background-image: url(/assets/images/home-1600.jpg);
+    }
+}
+
+@media screen and (min-width: 1601px) {
+    #banner {
+        background-image: url(/assets/images/home-1920.jpg);
+    }
 }
 
 #banner-mask {

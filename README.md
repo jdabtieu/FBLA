@@ -48,10 +48,11 @@ test.
 
 ### More Features
 - Accessibility settings
+- Google sign-in integration
 - User management
 - Submission management
 - Basic profile & statistics
-- 2-Factor-Authentication support
+- 2 factor authentication
 - And more!
 
 ## Problem Types

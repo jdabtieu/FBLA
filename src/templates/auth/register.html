@@ -10,6 +10,13 @@
     <input class="form-control mb-3" name="password" placeholder="Password" type="password" autocomplete="new-password" required>
     <input class="form-control mb-3" name="confirmation" placeholder="Confirmation" type="password" autocomplete="new-password" required>
     <button class="btn btn-primary" type="submit">Register</button>
+    {% if use_google %}
+        <a class="btn btn-outline-dark" href="/login/google" role="button" style="text-transform:none">
+            <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in"
+                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png">
+            Register with Google
+        </a>
+    {% endif %}
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 </form>
 <br>

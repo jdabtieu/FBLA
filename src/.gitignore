@@ -9,7 +9,7 @@
 /settings.py
 /secret_key.txt
 /maintenance_mode
-
+/credentials.json
 # Logs
 /logs
 

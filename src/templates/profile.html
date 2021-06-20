@@ -37,11 +37,25 @@
                     </tr>
                     <tr>
                         <td>Password: </td>
-                        <td><input type="password" disabled value="********"> <a href="/settings/changepassword" role="button">Change Password</a></td>
+                        <td>
+                            {% if "googleapis" in user_data['password'] %}
+                                <input disabled value="Logged in via Google">
+                            {% else %}
+                                <input type="password" disabled value="********">
+                                <a href="/settings/changepassword" role="button">Change Password</a>
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <td>Two-Factor Authentication: </td>
-                        <td><input disabled value="{{ 'On' if user_data['twofa'] else 'Off' }}"> <a href="/settings/toggle2fa" role="button">Toggle 2FA</a></td>
+                        <td>
+                            {% if "googleapis" in user_data['password'] %}
+                                <input disabled value="Logged in via Google">
+                            {% else %}
+                                <input disabled value="{{ 'On' if user_data['twofa'] else 'Off' }}">
+                                <a href="/settings/toggle2fa" role="button">Toggle 2FA</a>
+                            {% endif %}
+                        </td>
                     </tr>
                 </tbody>
             </table>

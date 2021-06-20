@@ -86,5 +86,7 @@ This project is licensed under the [GNU AGPLv3](LICENSE).
 - [Flask-Session 0.3.2](https://flask-session.readthedocs.io/en/latest/)
 - [Flask-WTF 0.15.1](https://flask-wtf.readthedocs.io/en/0.15.x/)
 - [PyJWT 2.1.0](https://pyjwt.readthedocs.io/en/latest/)
+- [Google API for Python](https://cloud.google.com/apis/docs/client-libraries-explained#google_api_client_libraries)
+- [Requests 2.25.1](https://docs.python-requests.org/en/master/)
 - [Bootstrap 5.0.0](https://getbootstrap.com/)
 - [jQuery 3.5.1](https://jquery.com/)

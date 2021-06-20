@@ -16,3 +16,5 @@ MAIL_DEFAULT_SENDER = ("sender name", "sender email")
 # Edit other settings here
 LOGGING_FILE_LOCATION = "logs/application.log"
 SESSION_FILE_DIR = "session/"
+USE_GOOGLE_LOGIN = False
+WEBSERVER_URL = "https://fblaquiz.live"

@@ -6,10 +6,12 @@ from datetime import datetime, timedelta
 import jwt
 from cs50 import SQL
 from flask import (Flask, flash, redirect, render_template, request,
-                   send_from_directory, session)
+                   send_from_directory, session, abort)
 from flask_mail import Mail
 from flask_session import Session
 from flask_wtf.csrf import CSRFProtect
+from google_auth_oauthlib.flow import Flow
+import requests
 from werkzeug.exceptions import HTTPException, InternalServerError, default_exceptions
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -116,7 +118,8 @@ def login():
     session.clear()
 
     if request.method == "GET":
-        return render_template("auth/login.html")
+        return render_template("auth/login.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"])
 
     # Reached using POST
 
@@ -126,22 +129,26 @@ def login():
     # Ensure username and password were submitted
     if not username or not password:
         flash('Username and password cannot be blank', 'danger')
-        return render_template("auth/login.html"), 400
+        return render_template("auth/login.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 400
 
     # Ensure username exists and password is correct
     rows = db.execute("SELECT * FROM users WHERE username = :username",
                       username=request.form.get("username"))
     if len(rows) != 1 or not check_password_hash(rows[0]["password"], password):
         flash('Incorrect username/password', 'danger')
-        return render_template("auth/login.html"), 401
+        return render_template("auth/login.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 401
 
     # Ensure user is not banned and has confirmed their account
     if rows[0]["banned"]:
         flash('You are banned! Please message an admin to appeal the ban', 'danger')
-        return render_template("auth/login.html"), 403
+        return render_template("auth/login.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 403
     if not rows[0]["verified"]:
         flash('Your account has not been confirmed. Please check your email', 'danger')
-        return render_template("auth/login.html"), 403
+        return render_template("auth/login.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 403
 
     # 2fa verification via email
     if rows[0]["twofa"]:
@@ -163,7 +170,8 @@ def login():
 
         flash(('A login confirmation email has been sent to the email address you '
                'provided. Be sure to check your spam folder!'), 'success')
-        return render_template("auth/login.html")
+        return render_template("auth/login.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"])
 
     # Remember which user has logged in
     session["user_id"] = rows[0]["id"]
@@ -182,11 +190,62 @@ def logout():
     session.clear()
     return redirect("/")
 
+@app.route("/login/google")
+def login_google():
+    if not app.config["USE_GOOGLE_LOGIN"]:
+        return abort(404)
+
+    # Get required scopes
+    SCOPES = ["https://www.googleapis.com/auth/userinfo.email",
+              "https://www.googleapis.com/auth/userinfo.profile",
+              "openid"]
+    flow = Flow.from_client_secrets_file(
+        "credentials.json", scopes=SCOPES,
+        redirect_uri=app.config["WEBSERVER_URL"] + "/login/callback")
+    # Redirect user to authorization URL
+    auth_url, _ = flow.authorization_url(prompt='consent')
+    return redirect(auth_url)
+
+
+@app.route("/login/callback")
+def login_callback():
+    if not app.config["USE_GOOGLE_LOGIN"]:
+        return abort(404)
+
+    # Fetch name and email from Google
+    code = request.args.get("code")
+    SCOPES = ["https://www.googleapis.com/auth/userinfo.email",
+              "https://www.googleapis.com/auth/userinfo.profile",
+              "openid"]
+    flow = Flow.from_client_secrets_file(
+        "credentials.json", scopes=SCOPES,
+        redirect_uri=app.config["WEBSERVER_URL"] + "/login/callback")
+    flow.fetch_token(code=code)
+    creds = flow.credentials
+    userinfo = requests.get(("https://www.googleapis.com/oauth2/v3/userinfo?"
+                             "alt=json&access_token=") + creds.token).json()
+
+    # Check if user is registering an account
+    rows = db.execute("SELECT * FROM users WHERE email=?", userinfo["email"])
+    if len(rows) == 0:
+        db.execute(("INSERT INTO users (username, password, email, join_date, verified) "
+                    "VALUES (?, ?, ?, datetime('now'), 1)"),
+                   userinfo["name"], creds.to_json(), userinfo["email"])
+        rows = db.execute("SELECT * FROM users WHERE email=?", userinfo["email"])
+
+    # Remember which user has logged in
+    session["user_id"] = rows[0]["id"]
+    session["username"] = rows[0]["username"]
+    session["admin"] = rows[0]["admin"]
+    return redirect("/")
+
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
-        return render_template("auth/register.html")
+        return render_template("auth/register.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"])
 
     # Reached using POST
 
@@ -198,30 +257,36 @@ def register():
     # Ensure username is valid
     if not username:
         flash('Username cannot be blank', 'danger')
-        return render_template("auth/register.html"), 400
+        return render_template("auth/register.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 400
     if not verify_text(username):
         flash('Invalid username', 'danger')
-        return render_template("auth/register.html"), 400
+        return render_template("auth/register.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 400
 
     # Ensure password is valid
     if not password or len(password) < 8:
         flash('Password must be at least 8 characters', 'danger')
-        return render_template("auth/register.html"), 400
+        return render_template("auth/register.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 400
     if not confirmation or password != confirmation:
         flash('Passwords do not match', 'danger')
-        return render_template("auth/register.html"), 400
+        return render_template("auth/register.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 400
 
     # Ensure username and email do not already exist
     rows = db.execute("SELECT * FROM users WHERE username=:username",
                       username=username)
     if len(rows) > 0:
         flash('Username already exists', 'danger')
-        return render_template("auth/register.html"), 409
+        return render_template("auth/register.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 409
     rows = db.execute("SELECT * FROM users WHERE email=:email",
                       email=request.form.get("email"))
     if len(rows) > 0:
         flash('Email already exists', 'danger')
-        return render_template("auth/register.html"), 409
+        return render_template("auth/register.html",
+                               use_google=app.config["USE_GOOGLE_LOGIN"]), 409
 
     # Send confirmation email
     exp = datetime.utcnow() + timedelta(seconds=1800)
@@ -247,7 +312,8 @@ def register():
 
     flash(("An account creation confirmation email has been sent to the email address "
            "you provided. Be sure to check your spam folder!"), 'success')
-    return render_template("auth/register.html")
+    return render_template("auth/register.html",
+                           use_google=app.config["USE_GOOGLE_LOGIN"])
 
 
 @app.route('/confirmregister/<token>')

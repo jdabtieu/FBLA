@@ -14,7 +14,7 @@ secret = secrets.token_hex(48)  # 384 bits
 with open('secret_key.txt', 'w') as file:
     file.write(secret)
 
-# rotate logs
+# Rotate server logs
 if os.path.exists('logs/application.log'):
     timestamp = datetime.date.strftime(datetime.datetime.now(), "%d-%m-%Y")
     shutil.copy2("logs/application.log", f"logs/{timestamp}-application.log")

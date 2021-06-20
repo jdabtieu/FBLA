@@ -38,7 +38,7 @@ def generate_password():
     """
     Generates a random 16-character password.
 
-    used on Users page to manually reset passwords.
+    Used on Users page to manually reset passwords.
     """
     password = secrets.token_urlsafe(16)
     return password

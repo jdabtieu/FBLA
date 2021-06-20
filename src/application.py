@@ -17,7 +17,6 @@ from helpers import *
 
 app = Flask(__name__)
 app.config.from_object('settings')
-app.config['SESSION_FILE_DIR'] = 'session/'
 
 # Configure logging
 logging.basicConfig(
@@ -45,8 +44,8 @@ csrf.init_app(app)
 @app.before_request
 def check_for_maintenance():
     # Don't prevent login or getting assets
-    if request.path == '/login' or (request.path[0:8] == '/assets/'
-                                    and '..' not in request.path):
+    if request.path == '/login' or (request.path[0:8] == '/assets/' and
+                                    '..' not in request.path):
         return
 
     maintenance_mode = bool(os.path.exists('maintenance_mode'))
@@ -266,8 +265,7 @@ def confirm_register(token):
     if datetime.strptime(token["expiration"], "%Y-%m-%dT%H:%M:%S.%f") < datetime.utcnow():
         db.execute(
             "DELETE FROM users WHERE verified=0 and email=:email", email=token['email'])
-        flash("Email verification link expired. Please register again using the same email",  # noqa
-              "danger")
+        flash("Email verification link expired. Please register again", "danger")
         return redirect("/register")
 
     db.execute("UPDATE users SET verified=1 WHERE email=:email", email=token['email'])
@@ -648,6 +646,7 @@ def admin_submissions():
     modifier = "WHERE"
     args = []
     if request.args.get("username"):
+        # None usernames means anonymous users
         if request.args.get("username") == "None":
             modifier += " username IS NULL AND"
         else:
@@ -729,7 +728,8 @@ def createproblem():
                     "difficulty, draft) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"),
                    qtype, question, a, b, ans, category, difficulty, draft)
 
-        problem_id = db.execute("SELECT * FROM problems ORDER BY id DESC LIMIT 1")[0]["id"]
+        problem_id = db.execute(
+            "SELECT * FROM problems ORDER BY id DESC LIMIT 1")[0]["id"]
 
         flash('Problem successfully created', 'success')
         return redirect("/problem/" + str(problem_id))
@@ -855,6 +855,7 @@ def makeadmin():
 @app.route("/admin/maintenance", methods=["POST"])
 @admin_required
 def maintenance():
+    # Checks if the maintenance_mode file exists
     maintenance_mode = os.path.exists('maintenance_mode')
 
     if maintenance_mode:
@@ -1035,5 +1036,6 @@ def security_policies(response):
     return response
 
 
+# Allow running application.py when debugging
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

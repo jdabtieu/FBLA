@@ -190,6 +190,7 @@ def logout():
     session.clear()
     return redirect("/")
 
+
 @app.route("/login/google")
 def login_google():
     if not app.config["USE_GOOGLE_LOGIN"]:
@@ -238,7 +239,6 @@ def login_callback():
     session["username"] = rows[0]["username"]
     session["admin"] = rows[0]["admin"]
     return redirect("/")
-
 
 
 @app.route("/register", methods=["GET", "POST"])

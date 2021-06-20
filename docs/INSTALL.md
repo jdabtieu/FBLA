@@ -49,6 +49,28 @@ For example, for cron, you can use:
 0 0 * * * cd /path/to/install/FBLA/src && python daily_tasks.py
 ```
 
+## Allowing Google sign-in (optional)
+By default, Google sign-in is disabled. However, if you are a G-suite for Workspace/Educatin user 
+or otherwise would like Google sign-in functionality, it can be enabled through the following steps:
+
+1. In settings.py, change `USE_GOOGLE_LOGIN` to `True` and `WEBSERVER_URL` to your server's URL.
+Make sure you enter it with the schema ("https://" or "http://") and no trailing slashes. For 
+example, "https://fblaquiz.live" is acceptable, while "fblaquiz.live" and "https://fblaquiz.live/" 
+are not.
+2. Go to https://console.cloud.google.com/apis/dashboard and create a new project called FBLAquiz.
+3. Once created, go to the left-side navigation menu to find the "API & Services" entry, and click 
+OAuth consent screen.
+4. Fill in the required details on the first page and click Continue.
+5. On the scopes page, add the auth/userinfo.email, auth/userinfo.profile, and openid scopes.
+6. Continue to the end of the setup and ensure it is correct.
+7. Go to the Credentials page and click Create Credentials, then OAuth client ID.
+8. Select Web application, and add your server's URL + "/login/callback" to the authorized redirect 
+URIs. For example, for a server at "https://fblaquiz.live/", enter "https://fblaquiz.live/login/callback".
+9. Save the credential, and then click the download icon to save it to your computer.
+10. Move the downloaded file to the server under the `FBLA/src` folder, and rename it to credentials.json.
+11. Go back to the OAuth consent screen and click the Publish App button.
+12. Follow the instructions to get published.
+
 # Installation for Nginx + Gunicorn on Ubuntu
 If you are planning on running FBLAquiz through Nginx and Gunicorn on Ubuntu, this part of the guide will help you do that. You can also run FBLA using another WSGI application or Apache.
 
@@ -178,6 +200,9 @@ For example, for cron, you can use:
 You can also set up SSL if you want, using certbot.
 
 A very good guide is available [here](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04) detailing this process.
+
+## Step 8 (options) - Allowing Google sign-in
+See [Allowing Google sign-in](#allowing-google-sign-in-optional)
 
 ## Common Errors
 ### 502 Bad Gateway on first install

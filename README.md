@@ -1,5 +1,5 @@
 # What is FBLAquiz?
-![](https://github.com/jdabtieu/FBLA/actions/workflows/build.yml/badge.svg)
+[![](https://github.com/jdabtieu/FBLA/actions/workflows/build.yml/badge.svg)](https://github.com/jdabtieu/FBLA/actions/workflows/build.yml)
 
 FBLAquiz is a web application serving quizzes about everything FBLA! It comes with all the tools 
 you need to create problems, run quizzes, and manage users.

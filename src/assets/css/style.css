@@ -1,13 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 /****************** HOME PAGE ********************************/
 #banner {
     width: 100%;
     position: relative;
     overflow: hidden;
     height: calc(100vh - 56px);
+    background-image: url(/assets/images/home-768.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+@media screen and (min-width: 769px and max-width: 1024px) {
+    #banner {
+        background-image: url(/assets/images/home-1024.jpg);
+    }
+}
+
+@media screen and (min-width: 1025px and max-width: 1366px) {
+    #banner {
+        background-image: url(/assets/images/home-1366.jpg);
+    }
+}
+
+@media screen and (min-width: 1367px and max-width: 1600px) {
+    #banner {
+        background-image: url(/assets/images/home-1600.jpg);
+    }
+}
+
+@media screen and (min-width: 1601px) {
+    #banner {
+        background-image: url(/assets/images/home-1920.jpg);
+    }
 }
 
 #banner-mask {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
     width: 100%;
     height: 100%;
     position: absolute;
@@ -20,7 +50,7 @@
     left: 0;
     margin-left: 50%;
     transform: translate(-50%, -50%);
-    color: #040404;
+    color: white;
 }
 
 #banner-heading h1 {
@@ -84,8 +114,7 @@
 
 /****************** HELP PAGE LAYOUT *************************/
 .help-img {
-    max-width: 95vw;
-    overflow-x: auto;
+    max-width: 100%;
 }
 
 /****************** ADMIN PAGE LAYOUT ************************/
@@ -150,6 +179,7 @@ body {
     flex-direction: column;
     scroll-behavior: smooth;
     overflow: overlay;
+    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 main {
@@ -278,6 +308,10 @@ label {
     filter: invert(57%) sepia(58%) saturate(3606%) hue-rotate(83deg) brightness(118%) contrast(125%);
 }
 
+.svg-white {
+    filter: invert(99%) sepia(1%) saturate(0%) hue-rotate(274deg) brightness(109%) contrast(100%);
+}
+
 /****************** ANIMATIONS *******************************/
 @keyframes fade-in {
     0%   {opacity: 0;}
@@ -307,4 +341,32 @@ main {
     ::-webkit-scrollbar-thumb:hover {
         background: #555;
     }
+}
+/****************** ACCESSIBLITY SETTINGS ********************/
+#accessibility-drop .accessibility-item, .quiz-narrator {
+    cursor: pointer;
+}
+
+#accessibility-drop .accessibility-item div.form-switch {
+    display: inline;
+}
+
+body.contrast nav {
+    background-color: #000!important;
+}
+
+body.contrast .btn-primary {
+    background-color: #000!important;
+}
+
+body.contrast nav a.nav-link {
+    color: #f0f0f0!important;
+}
+
+body.contrast .green {
+    color: #29a548!important;
+}
+
+body.zoom {
+    zoom: 1.5;
 }

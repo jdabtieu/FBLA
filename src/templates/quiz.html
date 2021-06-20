@@ -3,6 +3,7 @@
 {% block title %}Quiz{% endblock %}
 
 {% block main %}
+<script src="/assets/js/narrator.js"></script>
 <div style="position: relative;">
     <button onclick="zen()" class="print-button">
         <img src="/assets/images/leaf-solid.svg" class="icon">
@@ -13,7 +14,14 @@
 <form method="post" action="/quiz/submit" autocomplete="off" id="quiz-form">
     {% for question in questions %}
         <div class="mb-3">
-            <h3>{{ question["description"] }}</h3>
+            <h3>
+                <img src="/assets/images/volume-up-solid.svg"
+                     class="icon quiz-narrator"
+                     title="Speak question"
+                     alt="Speak question"
+                     onclick="say(this.parentElement.parentElement)">
+                {{ question["description"] }}
+            </h3>
             {% if question["type"] == "MC" %}
                 {% for letter in "abcd" %}
                     <div class="mb-2">

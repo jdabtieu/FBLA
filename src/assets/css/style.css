@@ -114,8 +114,7 @@
 
 /****************** HELP PAGE LAYOUT *************************/
 .help-img {
-    max-width: 95vw;
-    overflow-x: auto;
+    max-width: 100%;
 }
 
 /****************** ADMIN PAGE LAYOUT ************************/

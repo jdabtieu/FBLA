@@ -343,7 +343,7 @@ main {
     }
 }
 /****************** ACCESSIBLITY SETTINGS ********************/
-#accessibility-drop .accessibility-item {
+#accessibility-drop .accessibility-item, .quiz-narrator {
     cursor: pointer;
 }
 

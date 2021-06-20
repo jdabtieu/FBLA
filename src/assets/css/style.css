@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 /****************** HOME PAGE ********************************/
 #banner {
     width: 100%;
@@ -7,6 +9,7 @@
 }
 
 #banner-mask {
+    /*background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));*/
     background-color: rgba(255, 255, 255, 0.3);
     width: 100%;
     height: 100%;
@@ -150,6 +153,7 @@ body {
     flex-direction: column;
     scroll-behavior: smooth;
     overflow: overlay;
+    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 main {

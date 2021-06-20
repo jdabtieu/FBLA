@@ -6,7 +6,7 @@
 <h2>Welcome, {{ session.username }} :)</h2>
 <div class="row">
     <div class="col-sm-6 admin-card">
-        <div class="card">
+        <div class="card" style="background-color: #eeffee;">
             <div class="card-body">
                 <h5 class="card-title">Take a Quiz</h5>
                 <p class="card-text">Ready to take a quiz?</p>
@@ -16,7 +16,7 @@
     </div>
     {% if most_difficult %}
     <div class="col-sm-6 admin-card">
-        <div class="card">
+        <div class="card" style="background-color: #ffeeee;">
             <div class="card-body">
                 <h5 class="card-title">Your Weakest Subject</h5>
                 <p class="card-text">Your weakest subject is {{ most_difficult }}. Do you want to train it?</p>
@@ -26,7 +26,7 @@
     </div>
     {% endif %}
     <div class="col-sm-6 admin-card">
-        <div class="card">
+        <div class="card" style="background-color: #eeeeff;">
             <div class="card-body">
                 <h5 class="card-title">Past Quizzes</h5>
                 <p class="card-text">View your past quizzes. Maybe study the questions you got wrong?</p>

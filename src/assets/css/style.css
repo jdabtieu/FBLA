@@ -119,7 +119,11 @@
 
 /****************** ADMIN PAGE LAYOUT ************************/
 .admin-card {
-    padding: calc(var(--bs-gutter-x)/ 2)
+    padding: calc(var(--bs-gutter-x)/ 2);
+}
+
+.admin-card:hover {
+    filter: drop-shadow(6px 6px 4px #dddddd);
 }
 
 .create-blank {

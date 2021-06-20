@@ -4,7 +4,7 @@
 FBLAquiz is a web application serving quizzes about everything FBLA! It comes with all the tools 
 you need to create problems, run quizzes, and manage users.
 
-![](docs/img/image3.png)
+![Cover Image](docs/img/cover.jpeg)
 
 ## Live Demo
 https://fblaquiz.live
@@ -47,6 +47,7 @@ Distracted by the navigation bar and scroll bar? You can hide them with the Zen 
 test.
 
 ### More Features
+- Accessibility settings
 - User management
 - Submission management
 - Basic profile & statistics

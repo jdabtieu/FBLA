@@ -308,6 +308,10 @@ label {
     filter: invert(57%) sepia(58%) saturate(3606%) hue-rotate(83deg) brightness(118%) contrast(125%);
 }
 
+.svg-white {
+    filter: invert(99%) sepia(1%) saturate(0%) hue-rotate(274deg) brightness(109%) contrast(100%);
+}
+
 /****************** ANIMATIONS *******************************/
 @keyframes fade-in {
     0%   {opacity: 0;}
@@ -337,4 +341,32 @@ main {
     ::-webkit-scrollbar-thumb:hover {
         background: #555;
     }
+}
+/****************** ACCESSIBLITY SETTINGS ********************/
+#accessibility-drop .accessibility-item {
+    cursor: pointer;
+}
+
+#accessibility-drop .accessibility-item div.form-switch {
+    display: inline;
+}
+
+body.contrast nav {
+    background-color: #000!important;
+}
+
+body.contrast .btn-primary {
+    background-color: #000!important;
+}
+
+body.contrast nav a.nav-link {
+    color: #f0f0f0!important;
+}
+
+body.contrast .green {
+    color: #29a548!important;
+}
+
+body.zoom {
+    zoom: 1.5;
 }

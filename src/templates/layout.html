@@ -32,24 +32,46 @@
                         {% if session.admin %}
                             <li><a class="nav-link" href="/admin/console">Admin Console</a></li>
                         {% endif %}
-                    </ul>           
-                    {% if session.username %}
-                        <ul class="navbar-nav ms-auto">
+                    </ul>
+                    <ul class="navbar-nav ms-auto dropstart">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="accessibilityDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                               title="Accessibility Settings">
+                                <img src="/assets/images/accessible.svg" class="icon svg-white">
+                            </a>
+                            <ul class="dropdown-menu"
+                                id="accessibility-drop"
+                                aria-labelledby="accessibilityDropdown">
+                                <li class="dropdown-item accessibility-item" id="high-contrast">
+                                    High Contrast Mode
+                                    <div class="form-switch">
+                                        <input class="form-check-input" type="checkbox">
+                                    </div>
+                                </li>
+                                <li class="dropdown-item accessibility-item" id="magnifier">
+                                    Magnifier
+                                    <div class="form-switch">
+                                        <input class="form-check-input" type="checkbox">
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        {% if session.username %}
                             <li class="nav-link white">Welcome, {{ session.username }}</li>
                             <li><a class="nav-link" href="/profile">Profile</a></li>
                             <li><a class="nav-link" href="/logout">Log Out</a></li>
-                        </ul>
-                    {% else %}
-                        <ul class="navbar-nav ms-auto">
+                        {% else %}
                             <li><a class="nav-link" href="/register">Register</a></li>
                             <li><a class="nav-link" href="/login">Log In</a></li>
-                        </ul>
-                    {% endif %}
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </nav>
         {% block premain %}{% endblock %}
         <script src="/assets/js/jquery.min.js"></script>
+        <script src="/assets/js/accessible.js"></script>
         <main class="container-md">
             {% with msg = get_flashed_messages(with_categories=True) %}
                 {% if msg %}

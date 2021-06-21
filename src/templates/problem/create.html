@@ -68,6 +68,9 @@
             $("#d .blank").removeAttr("required");
         } else {
             $(".inputs input[type='radio']").removeAttr("required").css("display", "");
+            $(".inputs").css("display", "");
+            $("#c").css("display", "");
+            $("#d").css("display", "");
             $(".inputs .blank").removeAttr("required").addClass("create-blank");
             $(".inputs input[type='radio']").attr("type", "checkbox");
         }

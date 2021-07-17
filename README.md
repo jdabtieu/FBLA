@@ -4,15 +4,12 @@
 FBLAquiz is a web application serving quizzes about everything FBLA! It comes with all the tools 
 you need to create problems, run quizzes, and manage users.
 
+The presentataion slides used at NLC 2021 can be viewed [here](Presentation.pdf)
+
 ![Cover Image](docs/img/cover.jpeg)
 
 ## Live Demo
-https://fblaquiz.live
-
-The demo is reset every hour.<br>
-Admin account credentials: `admin:FBLAadmin`<br>
-User account credentials: `user:FBLAuser`<br>
-Alternatively, you may create your own account.
+To conserve resources, the live demo is no longer online.
 
 ## Features
 ### Easy Installation
